@@ -6,7 +6,7 @@ hr {
 body {
     background: url("/static/img/background-tiles.png");
     background-repeat: repeat;
-    color: white;
+    color: black;
 }
 
 
@@ -45,6 +45,10 @@ img {
 
 .container .row button {
     line-height: 3em;
+}
+
+.li {
+    color: black;
 }
 
 .card {

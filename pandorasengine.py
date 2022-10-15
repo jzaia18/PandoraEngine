@@ -15,7 +15,6 @@ from utils import databaseUtils, gameUtils
 UPLOAD_FOLDER = "static/"
 
 
-
 def require_login(f):
     @wraps(f)
     def inner(*args, **kwargs):
@@ -72,9 +71,10 @@ def join():
 
 @app.route("/room/<key>")
 def room(key):
-    if key in app.rooms:
-        app.rooms[key]['players'].append((session['user'], session['username']))
-        return render_template("room.html", room_data=app.rooms[key])
+    room_data = databaseUtils.get_room_by_key(app.client, key)
+    if room_data:
+        databaseUtils.add_user_to_room(app.client, key, databaseUtils.get_user_by_id(app.client, session['user']))
+        return render_template("room.html", room_data=room_data)
     flash("Room does not exist!")
     return redirect(url_for('join'))
 
@@ -93,12 +93,11 @@ def addRoom():
         for i in range(4):
             key.append(choice(gameUtils.alphanumeric))
         key = ''.join(key)
-        if key not in app.rooms:
+        if not databaseUtils.get_room_by_key(app.client, key):
             break
 
-    app.rooms[key] = dict()
-    app.rooms[key]['game'] = game
-    app.rooms[key]['players'] = list()
+    databaseUtils.create_room(app.client, key, session['user'], [databaseUtils.get_user_by_id(app.client, session["user"])], game)
+
     return redirect(url_for("room", key=key))
 
 
@@ -143,7 +142,7 @@ def auth():
             flash('Incorrect username or password')
             return redirect(url_for('login'))
     else:
-        success = databaseUtils.create_user(app.client , request.form['user'], request.form['pwd'])
+        success = databaseUtils.create_user(app.client, request.form['user'], request.form['pwd'])
         if success:
             session['user'] = str(success)
             session['username'] = databaseUtils.get_user_by_id(app.client, success)['username']
@@ -157,6 +156,5 @@ def auth():
 
 if __name__ == '__main__':
     app.client = pymongo.MongoClient("mongodb+srv://admin:pass@cluster0.idxdfmn.mongodb.net/?retryWrites=true&w=majority")
-    app.rooms = dict()
     app.debug = True
     app.run(host='0.0.0.0')

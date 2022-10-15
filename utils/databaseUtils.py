@@ -26,6 +26,40 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
     return "https://storage.cloud.google.com/pandora-engine-bucket/" + destination_blob_name
 
 
+def create_room(client, key, host, players, game):
+    db = client.Rooms
+    rooms = db.rooms
+
+    room = rooms.insert_one({
+        "key": key,
+        "host": host,
+        "players": players,
+        "game": game})
+
+    return room.inserted_id
+
+
+def get_room_by_key(client, key):
+    db = client.Rooms
+    rooms = db.rooms
+
+    return rooms.find_one({"key": key})
+
+
+def add_user_to_room(client, key, user):
+    db = client.Rooms
+    rooms = db.rooms
+
+    return rooms.update_one({"key": key}, {"$addToSet": {"players": user}})
+
+
+def delete_room(client, key):
+    db = client.Rooms
+    rooms = db.rooms
+
+    return rooms.delete_one({"key": key})
+
+
 # creates a user in the database with a username, password, and post id
 def create_user(client, username, password):
     db = client.Users
