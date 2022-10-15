@@ -73,7 +73,7 @@ def join():
 @app.route("/room/<key>")
 def room(key):
     if key in rooms:
-        rooms[key]['players'].append( (session['user'], session['username']) )
+        rooms[key]['players'].append((session['user'], session['username']))
         return render_template("room.html", room_data=rooms[key])
     flash("Room does not exist!")
 
@@ -99,6 +99,11 @@ def addRoom():
     rooms[key]['game'] = game
     rooms[key]['players'] = list()
     return redirect(url_for("room", key=key))
+
+
+@app.route("/joinRoom", methods=["POST"])
+def joinRoom():
+    return redirect(url_for("room", key=request.form['key']))
 
 
 # If Uploading Images Is Required
