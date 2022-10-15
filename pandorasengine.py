@@ -34,7 +34,6 @@ Bootstrap(app)
 
 client = pymongo.MongoClient("mongodb+srv://admin:pass@cluster0.idxdfmn.mongodb.net/?retryWrites=true&w=majority")
 
-
 @app.template_global()
 def modify_query(origin, **new_values):
     args = request.args.copy()
