@@ -101,7 +101,7 @@ def addRoom():
             break
 
     databaseUtils.clear_user_room(app.client, session['user'])
-    databaseUtils.create_room(app.client, key, session['user'], [databaseUtils.get_user_by_id(app.client, session["user"])], game)
+    databaseUtils.create_room(app.client, key, session['user'], [], game)
     databaseUtils.add_room_to_user(app.client, session['username'], key)
     return redirect(url_for("room", key=key))
 
