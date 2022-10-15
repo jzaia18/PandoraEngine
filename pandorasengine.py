@@ -13,7 +13,7 @@ from utils import databaseUtils, gameUtils
 
 
 UPLOAD_FOLDER = "static/"
-rooms = dict()
+
 
 
 def require_login(f):
@@ -72,10 +72,11 @@ def join():
 
 @app.route("/room/<key>")
 def room(key):
-    if key in rooms:
-        rooms[key]['players'].append((session['user'], session['username']))
-        return render_template("room.html", room_data=rooms[key])
+    if key in app.rooms:
+        app.rooms[key]['players'].append((session['user'], session['username']))
+        return render_template("room.html", room_data=app.rooms[key])
     flash("Room does not exist!")
+    return redirect(url_for('join'))
 
 
 @app.route("/createRoom")
@@ -92,12 +93,12 @@ def addRoom():
         for i in range(4):
             key.append(choice(gameUtils.alphanumeric))
         key = ''.join(key)
-        if key not in rooms:
+        if key not in app.rooms:
             break
 
-    rooms[key] = dict()
-    rooms[key]['game'] = game
-    rooms[key]['players'] = list()
+    app.rooms[key] = dict()
+    app.rooms[key]['game'] = game
+    app.rooms[key]['players'] = list()
     return redirect(url_for("room", key=key))
 
 
@@ -156,5 +157,6 @@ def auth():
 
 if __name__ == '__main__':
     app.client = pymongo.MongoClient("mongodb+srv://admin:pass@cluster0.idxdfmn.mongodb.net/?retryWrites=true&w=majority")
+    app.rooms = dict()
     app.debug = True
     app.run(host='0.0.0.0')
