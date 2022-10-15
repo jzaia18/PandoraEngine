@@ -41,12 +41,23 @@ def create_text_input_widget(prompt):
 
 
 @widget_creator
-def create_choice_widget(question, choices):
+def create_choice_widget(question, choices, answer):
     return {
         'widget_type': 'choice',
         'contents': {
             'question': question,
-            'choices': choices
+            'choices': choices,
+            'answer': answer
+        }
+    }
+
+
+@widget_creator
+def create_timer_widget(time):
+    return {
+        'widget_type': 'timer',
+        'contents': {
+            'time': time
         }
     }
 
