@@ -19,7 +19,9 @@ class Player:
 
 
 class Game:
-    def __init__(self, question_banks, widgets):
+    def __init__(self, name, max_players, question_banks, widgets):
+        self.name = name
+        self.max_players = max_players
         self.players = set()
         self.question_banks = question_banks
         self.widgets = widgets
@@ -35,7 +37,17 @@ class Game:
         else:
             print("Player " + player.name + " is not in this game")
 
+    def declare_winner(self):
+        winner = None
+        for player in self.players:
+            if not winner:
+                winner = player
 
+            if winner['score'] < player['score']:
+                winner = player
+
+        winner.isWinner = True
+        return winner
 
 
 

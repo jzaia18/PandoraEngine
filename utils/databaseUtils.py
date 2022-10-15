@@ -40,6 +40,13 @@ def create_game(client, name, max_players, widgets):
     return game
 
 
+def get_game_by_id(client, _id):
+    db = client.Games
+    games = db.games
+
+    return games.find_one({"_id": _id})
+
+
 def create_room(client, key, host, players, game):
     db = client.Rooms
     rooms = db.rooms

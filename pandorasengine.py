@@ -88,10 +88,10 @@ def createRoom():
 
 
 # Utility Routes, you do not stay on these pages
-@app.route("/addRoom", methods=["POST"])
+@app.route("/addRoom", methods=["GET", "POST"])
 def addRoom():
     key = []
-    game = None
+    game = databaseUtils.get_game_by_id(request.form['gameID'])
     while True:
         for i in range(4):
             key.append(choice(gameUtils.alphanumeric))
@@ -197,19 +197,19 @@ def generateWidgets():
     response = dict()
     for field in request.form:
         if field['widget_type'] == 'text':
-            widget_id = widgets.create_text_widget(app.client, field['contents'])
+            widget_id = widgets.create_text_widget(app.client, field['contents'], field['timer'])
             response[widget_id] = widgets.get_widget(app.client, widget_id)
 
         elif field['widget_type'] == 'image':
-            widget_id = widgets.create_image_widget(app.client, field['contents'])
+            widget_id = widgets.create_image_widget(app.client, field['contents'], field['timer'])
             response[widget_id] = widgets.get_widget(app.client, widget_id)
 
         elif field['widget_type'] == 'text_input':
-            widget_id = widgets.create_text_input_widget(app.client, field['contents'])
+            widget_id = widgets.create_text_input_widget(app.client, field['contents'], field['timer'])
             response[widget_id] = widgets.get_widget(app.client, widget_id)
 
         elif field['widget_type'] == 'choice':
-            widget_id = widgets.create_choice_widget(app.client, field['contents'], field['answer'])
+            widget_id = widgets.create_choice_widget(app.client, field['contents'], field['answer'], field['timer'])
             response[widget_id] = widgets.get_widget(app.client, widget_id)
 
         elif field['widget_type'] == 'timer':
