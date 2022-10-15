@@ -142,6 +142,9 @@ def imgUP():
     session['img_url'] = url
     return redirect(url_for("", img_url=url))
 
+@app.route("/test")
+def test():
+    return render_template("game.html")
 
 @app.route("/game")
 def game():
