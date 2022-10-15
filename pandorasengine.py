@@ -73,7 +73,7 @@ def join():
 @app.route("/room/<key>")
 def room(key):
     if key in rooms:
-        rooms[key]['players'].add(session['user'])
+        rooms[key]['players'].append( (session['user'], session['username']) )
         return render_template("room.html", room_data=rooms[key])
     flash("Room does not exist!")
 
@@ -97,7 +97,7 @@ def addRoom():
 
     rooms[key] = dict()
     rooms[key]['game'] = game
-    rooms[key]['players'] = session['user']
+    rooms[key]['players'] = list()
     return redirect(url_for("room", key=key))
 
 

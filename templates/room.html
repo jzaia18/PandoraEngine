@@ -4,7 +4,14 @@
 
 {% block body %}
     <center>
-
+        <div>
+            <label> Players currently in the room </label>
+            <ul class="list-group">
+                {% for player in room_data['players'] %}
+                    <li class="list-group-item">{{ player[1] }}</li>
+                {% endfor %}
+            </ul>
+        </div>
     </center>
 
 {% endblock %}
