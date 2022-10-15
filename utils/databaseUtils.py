@@ -26,6 +26,20 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
     return "https://storage.cloud.google.com/pandora-engine-bucket/" + destination_blob_name
 
 
+def create_game(client, name, max_players, widgets):
+    db = client.Games
+    games = db.games
+
+    game = games.insert_one({
+        "name": name,
+        "num_players": 0,
+        "max_players": max_players,
+        "widgets": widgets
+    })
+
+    return game
+
+
 def create_room(client, key, host, players, game):
     db = client.Rooms
     rooms = db.rooms
