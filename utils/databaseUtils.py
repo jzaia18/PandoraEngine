@@ -13,7 +13,7 @@ reports = db.reports
 fs = gridfs.GridFS(db)
 
 
-def upload_blob(bucket_name="pandora-engine-bucket", source_file_name="", destination_blob_name=""):
+def upload_blob(bucket_name, source_file_name, destination_blob_name):
     # bucket_name = "your-bucket-name"
     # source_file_name = "local/path/to/file"
     # destination_blob_name = "storage-object-name"
@@ -30,7 +30,7 @@ def upload_blob(bucket_name="pandora-engine-bucket", source_file_name="", destin
         )
     )
 
-    return "https://storage.cloud.google.com/communityproject-images/" + destination_blob_name
+    return "https://storage.cloud.google.com/pandora-engine-bucket/" + destination_blob_name
 
 
 # creates a user in the database with a username, password, and post id

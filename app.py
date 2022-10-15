@@ -45,21 +45,10 @@ def modify_query(origin, **new_values):
 def root():
     return render_template("home.html")
 
+
 @app.route('/about')
 def about():
     return render_template("about.html")
-
-@app.route("/report")
-@require_login
-def report():
-    return render_template("report.html")
-
-
-@app.route("/report_button", methods=["POST"])
-def report_button():
-    flash("Thank you for your support!")
-    temp = databaseUtils.add_report(request.form['report'])
-    return redirect('/report')
 
 
 @app.route('/login')
@@ -73,7 +62,7 @@ def logout():
         session.pop('user')
     return redirect(url_for('login'))
 
-"""
+
 #If Uploading Images Is Required
 @app.route("/imgUP", methods=["POST"])
 def imgUP():
@@ -87,10 +76,10 @@ def imgUP():
     f = open(filepath, "wb")
     f.write(decoded_data)
     f.close()
-    url = databaseUtils.upload_blob("communityproject-images", filepath, str(randint(0, 999999999999)))
+    url = databaseUtils.upload_blob("pandora-engine-bucket", filepath, str(randint(0, 999999999999)))
     session['img_url'] = url
     return redirect(url_for("createpost", img_url=url))
-"""
+
 
 
 @app.route("/auth", methods=["POST"])
