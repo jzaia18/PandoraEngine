@@ -13,7 +13,7 @@ hr {
 
 .wrapper {
     margin: 5vh;
-    background-color: rgba(36, 212, 42, 0.64);
+    background-color: rgba(212, 36, 42, 0.64);
     border: 1px solid white;
     padding: 2vh;
     min-height: 80vh;
@@ -26,7 +26,11 @@ img {
 }
 
 .nav {
-    background-color: azure;
+    background-color: red;
+}
+
+.nav-link {
+    color: black;
 }
 
 .row {
@@ -40,7 +44,7 @@ img {
 }
 
 .card {
-    background-color: rgba(240, 255, 255, .8);
+    background-color: rgba(200, 20, 20, .8);
     margin: 10vh;
     padding: 5vh;
     border-style: inset;
@@ -57,12 +61,12 @@ label {
 button {
     font-family: sans-serif;
     border-radius: 5vh;
-    background-color: rgba(240, 255, 255, .8);
+    background-color: rgba(200, 20, 20, .8);
     min-height: 50px;
     min-width: 200px;
     border-color: black;
     border-style: solid;
-    color: black;
+    color: white;
 
 }
 
@@ -83,7 +87,7 @@ button {
 .btn {
     font-family: sans-serif;
     border-radius: 5vh;
-    background-color: rgba(240, 255, 255, .8);
+    background-color: rgba(200, 20, 20, .8);
     min-height: 50px;
     min-width: 200px;
     border-color: black;
@@ -106,7 +110,7 @@ button {
     border: solid 1px #d7d7d7;
     border-radius: 20px;
     float: left;
-    background-color: rgba(240, 255, 255, .8);
+    background-color: rgba(200, 20, 20, .8);
     padding: 3em;
     margin: 0 1em;
     color: black;
