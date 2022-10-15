@@ -192,6 +192,34 @@ def validateWidget():
     return { 'verity': verity }
 
 
+@app.route("/generateWidgets", methods=["GET", "POST"])
+def generateWidgets():
+    response = dict()
+    for field in request.form:
+        if field['widget_type'] == 'text':
+            widget_id = widgets.create_text_widget(app.client, field['contents'])
+            response[widget_id] = widgets.get_widget(app.client, widget_id)
+
+        elif field['widget_type'] == 'image':
+            widget_id = widgets.create_image_widget(app.client, field['contents'])
+            response[widget_id] = widgets.get_widget(app.client, widget_id)
+
+        elif field['widget_type'] == 'text_input':
+            widget_id = widgets.create_text_input_widget(app.client, field['contents'])
+            response[widget_id] = widgets.get_widget(app.client, widget_id)
+
+        elif field['widget_type'] == 'choice':
+            widget_id = widgets.create_choice_widget(app.client, field['contents'])
+            response[widget_id] = widgets.get_widget(app.client, widget_id)
+
+        elif field['widget_type'] == 'timer':
+            flash("Implement this my boi")
+
+        else:
+            flash("Invalid Widget Type**DEBUG ERROR")
+
+    return response
+
 @app.route("/auth", methods=["POST", "GET"])
 def auth():
     if "submit" not in request.form or "user" not in request.form or "pwd" not in request.form:
