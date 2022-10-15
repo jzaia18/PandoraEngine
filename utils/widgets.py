@@ -55,6 +55,6 @@ def get_widget(client, widget_id):
     db = client.Games
     widgets = db.widgets
 
-    return dumps(widgets.find_one({
+    return widgets.find_one({
         '_id': ObjectId(widget_id)
-    }))
+    })
