@@ -30,8 +30,6 @@ def require_login(f):
 
 app = Flask(__name__)
 app.secret_key = os.urandom(16)
-app.client = pymongo.MongoClient("mongodb+srv://admin:pass@cluster0.idxdfmn.mongodb.net/?retryWrites=true&w=majority")
-app.debug = True
 Bootstrap(app)
 
 
@@ -152,5 +150,6 @@ def auth():
 
 
 if __name__ == '__main__':
+    app.client = pymongo.MongoClient("mongodb+srv://admin:pass@cluster0.idxdfmn.mongodb.net/?retryWrites=true&w=majority")
     app.debug = True
     app.run(host='0.0.0.0')
