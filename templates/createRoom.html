@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block active_link %}create-link{% endblock %}
+
+{% block body %}
+    <center class="form-holder">
+    <div class="form-cell">
+        <h3 class="text-center">Create A Room</h3>
+        <form action="/addRoom" method="POST">
+            <div class="form-group">
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                      <label class="input-group-text" for="gameSelect">Game</label>
+                  </div>
+                  <select class="custom-select" id="gameSelect">
+                    <option selected>Choose...</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                  </select>
+                </div>
+            </div>
+            <input type="submit" class="btn btn-light" name="create" value="Create Room">
+        </form>
+    </div>
+    </center>
+
+{% endblock %}

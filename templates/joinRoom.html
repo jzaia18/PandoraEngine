@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block active_link %}join-link{% endblock %}
+
+{% block body %}
+    <center class="form-holder">
+    <div class="form-cell">
+        <h3 class="text-center">Create A Room</h3>
+        <form action="/room" method="POST">
+            <div class="form-group">
+                <label for="key">:</label><br>
+                <input required type="text" name="key" id="key">
+            </div>
+        </form>
+
+        <input type="submit" class="btn btn-light" name="submit" value="Join!">
+    </div>
+    </center>
+
+{% endblock %}

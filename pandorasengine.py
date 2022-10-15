@@ -2,17 +2,18 @@ import base64
 import os
 from datetime import timedelta
 from functools import wraps
-from random import randint
+from random import randint, choice
+import string
 
 from flask import Flask, render_template, request, redirect, flash, url_for, session
 from flask_bootstrap import Bootstrap
 from werkzeug.urls import url_encode
 
-from utils import databaseUtils
+from utils import databaseUtils, gameUtils
 
 
 UPLOAD_FOLDER = "static/"
-
+rooms = dict()
 
 def require_login(f):
     @wraps(f)
@@ -63,7 +64,43 @@ def logout():
     return redirect(url_for('login'))
 
 
-#If Uploading Images Is Required
+@app.route("/join")
+def join():
+    return render_template("joinRoom.html")
+
+
+@app.route("/room/<key>")
+def room(key):
+    if key in rooms:
+        rooms[key]['players'].add(session['user'])
+        return render_template("room.html", room_data=rooms[key])
+    flash("Room does not exist!")
+
+
+@app.route("/createRoom")
+def createRoom():
+    return render_template("createRoom.html")
+
+
+# Utility Routes, you do not stay on these pages
+@app.route("/addRoom", methods=["POST"])
+def addRoom():
+    key = []
+    game = None
+    while True:
+        for i in range(4):
+            key.append(choice(gameUtils.alphanumeric))
+        key = ''.join(key)
+        if key not in rooms:
+            break
+
+    rooms[key] = dict()
+    rooms[key]['game'] = game
+    rooms[key]['players'] = session['user']
+    return redirect(url_for("room", key=key))
+
+
+# If Uploading Images Is Required
 @app.route("/imgUP", methods=["POST"])
 def imgUP():
     print("Uploading")
@@ -78,7 +115,7 @@ def imgUP():
     f.close()
     url = databaseUtils.upload_blob("pandora-engine-bucket", filepath, str(randint(0, 999999999999)))
     session['img_url'] = url
-    return redirect(url_for("createpost", img_url=url))
+    return redirect(url_for("", img_url=url))
 
 
 
