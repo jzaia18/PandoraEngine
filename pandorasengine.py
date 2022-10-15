@@ -12,7 +12,6 @@ from werkzeug.urls import url_encode
 
 from utils import databaseUtils, gameUtils, widgets
 
-
 UPLOAD_FOLDER = "static/"
 
 
@@ -114,7 +113,7 @@ def editor():
 @app.route("/widget/new/text", methods=['POST'])
 def widget_new_text():
     if 'text' not in request.form:
-        return None # Error
+        return None  # Error
 
     return str(widgets.create_text_widget(app.client, request.form['text']))
 
@@ -122,7 +121,7 @@ def widget_new_text():
 @app.route("/widget")
 def widget():
     if 'widget_id' not in request.args:
-        return None # Error
+        return None  # Error
 
     return widgets.get_widget(app.client, request.args['widget_id'])
 
@@ -149,18 +148,48 @@ def imgUP():
     session['img_url'] = url
     return redirect(url_for("", img_url=url))
 
+
 @app.route("/test")
 def test():
     return render_template("game.html")
 
+
 @app.route("/game")
 def game():
     # TODO: send initial widget
-    
+
     # TEST CODE (and pass `widget=widget` to `render_template`):
     # widget = widgets.get_widget(app.client, "634adeb7b0f28a5d9c7dd5c3")
     # widget['_id'] = str(widget['_id'])
     return render_template("game.html")
+
+
+@app.route("/validateWidget", methods=["GET", "POST"])
+def validateWidget():
+    verity = True
+    if request.form['widget_type'] == 'text':
+        if not request.form['contents']:
+            verity = False
+
+    elif request.form['widget_type'] == 'image':
+        if not request.form['contents']:
+            verity = False
+
+    elif request.form['widget_type'] == 'text_input':
+        if not request.form['contents']:
+            verity = False
+
+    elif request.form['widget_type'] == 'choice':
+        if not request.form['contents']:
+            verity = False
+
+    elif request.form['widget_type'] == 'timer':
+        if not request.form['value'] or not isinstance(request.form['value'], int):
+            verity = False
+    else:
+        flash("Invalid Widget Type**DEBUG ERROR")
+
+    return { 'verity': verity }
 
 
 @app.route("/auth", methods=["POST", "GET"])
@@ -194,6 +223,7 @@ def auth():
 
 
 if __name__ == '__main__':
-    app.client = pymongo.MongoClient("mongodb+srv://admin:pass@cluster0.idxdfmn.mongodb.net/?retryWrites=true&w=majority")
+    app.client = pymongo.MongoClient(
+        "mongodb+srv://admin:pass@cluster0.idxdfmn.mongodb.net/?retryWrites=true&w=majority")
     app.debug = True
     app.run(host='0.0.0.0')
