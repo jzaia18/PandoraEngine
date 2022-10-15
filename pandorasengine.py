@@ -1,4 +1,5 @@
 import base64
+import json
 import os
 from datetime import timedelta
 from functools import wraps
@@ -9,7 +10,7 @@ from flask import Flask, render_template, request, redirect, flash, url_for, ses
 from flask_bootstrap import Bootstrap
 from werkzeug.urls import url_encode
 
-from utils import databaseUtils, gameUtils
+from utils import databaseUtils, gameUtils, widgets
 
 
 UPLOAD_FOLDER = "static/"
@@ -100,6 +101,23 @@ def addRoom():
 
     return redirect(url_for("room", key=key))
 
+@app.route("/editor")
+def editor():
+    return render_template("editor.html")
+
+@app.route("/widget/new/text", methods=['POST'])
+def widget_new_text():
+    if 'text' not in request.form:
+        return None # Error
+
+    return str(widgets.create_text_widget(app.client, request.form['text']))
+
+@app.route("/widget")
+def widget():
+    if 'widget_id' not in request.args:
+        return None # Error
+
+    return widgets.get_widget(app.client, request.args['widget_id'])
 
 @app.route("/joinRoom", methods=["POST"])
 def joinRoom():
@@ -123,6 +141,11 @@ def imgUP():
     session['img_url'] = url
     return redirect(url_for("", img_url=url))
 
+
+@app.route("/game")
+def game():
+    # TODO: send initial widget
+    return render_template("game.html")
 
 @app.route("/auth", methods=["POST", "GET"])
 def auth():

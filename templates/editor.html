@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div class="center-block">
+      <div class="card">
+	<form action='/widget/new/text' method='POST'>
+	  <input type='text' name='text' />
+	  <input type='submit' />
+	</form>
+
+	<form action='/widget'>
+	  <input type='text' name='widget_id' />
+	  <input type='submit' />
+	</form>
+
+      </div>
+    </div>
+
+{% endblock %}
