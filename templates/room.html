@@ -8,7 +8,7 @@
             <label> Players currently in the room </label>
             <ul class="list-group">
                 {% for player in room_data['players'] %}
-                    <li class="list-group-item">{{ player[1] }}</li>
+                    <li class="list-group-item">{{ player['username'] }}</li>
                 {% endfor %}
             </ul>
         </div>
