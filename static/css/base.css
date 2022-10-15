@@ -1,8 +1,12 @@
 
 hr {
-    background-color: white;}
-    body{background: url( "static/home-background.png") repeat 0 0;
-    color: black;
+    background-color: white;
+}
+
+body {
+    background: url("/static/img/background-tiles.png");
+    background-repeat: repeat;
+    color: white;
 }
 
 
