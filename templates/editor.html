@@ -103,15 +103,32 @@
       console.log(get_timeline())
   });
 
-  function create_widget_info(widget_type) {
+  function create_widget_info(widget_type, widget_id) {
+      var widget_name = 'widget-' + widget_type + '-' +  widget_id;
+      var content = '<form id="form-' + widget_name + '">';
+      content += '<label for="timer-' + widget_name + '">Time (s):</label>';
+      content += '<input id="timer-' + widget_name + '" type="number" value=30 min=0 max=999 /><br />';
       
+      switch (widget_type) {
+      case 'text':
+	  content += '<label for="content-' + widget_name + '">Display Text:</label>';
+          content += '<textarea id="content-' + widget_name + '"></textarea>';
+	  break;
+	  
+      }
+
+      content += '</form>';
+      return content
   }
 
   // Report when the sort order has changed
   function reportActivity(e) {
       if (e.pullMode == 'clone') {
 	  console.log(e);
+	  var widget_type = e.item.id.split('-')[1];
 	  e.item.id += '-' + widget_id;
+
+	  var widget_controls = create_widget_info(widget_type, widget_id);
 	  widget_id++;
 
 	  $('#' + e.item.id).append($('<button class="btn btn-primary widget-drop-control" type="button" data-bs-toggle="collapse" data-bs-target="#options-' + e.item.id + '" aria-expanded="false" aria-controls="options-' + e.item.id + '"> \
@@ -119,7 +136,7 @@
 	      </button> \
 	      <div class="collapse" id="options-' + e.item.id + '"> \
 		  <div class="card card-body"> \
-		  Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger. \
+		  ' + widget_controls + '\
 		  </div> \
 	      </div>'));
       }
