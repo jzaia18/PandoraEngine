@@ -1,0 +1,11 @@
+.ghost {
+    opacity: 0.2;
+}
+
+.list-group {
+    margin: 20px;
+}
+
+#timeline {
+    min-height: 100px;
+}
