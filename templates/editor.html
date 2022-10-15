@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/editor.css' ) }}">
+{% endblock %}
+
+
 {% block body %}
 <div class="center-block">
   <div class="card">
@@ -14,19 +19,20 @@
     </form>
 
     <div id="demo" class="row">
-      <div id="items-1" class="list-group col">
-        <div id="item-1.1" data-id="1.1" class="list-group-item nested-1">Item 1.1</div>
-        <div id="item-1.2" data-id="1.2" class="list-group-item nested-1">Item 1.2</div>
-        <div id="item-1.3" data-id="1.3" class="list-group-item nested-1">Item 1.3</div>
-        <div id="item-1.4" data-id="1.4" class="list-group-item nested-1">Item 1.4</div>
-        <div id="item-1.5" data-id="1.5" class="list-group-item nested-1">Item 1.5</div>
+      <div class="col">
+	<h3>Available Widgets</h3>
+	<div id="widgets" class="list-group">
+          <div id="widget-text" data-id="widget-text" class="list-group-item nested-1">Text Widget</div>
+          <div id="widget-text_input" data-id="widget-text_input" class="list-group-item nested-1">Text Input Widget</div>
+          <div id="widget-choice" data-id="widget-choice" class="list-group-item nested-1">Choice Widget</div>
+          <div id="widget-image" data-id="widget-image" class="list-group-item nested-1">Image Widget</div>
+	</div>
       </div>
-      <div id="items-2" class="list-group col">
-        <div id="item-2.1" data-id="2.1" class="list-group-item nested-1">Item 2.1</div>
-        <div id="item-2.2" data-id="2.2" class="list-group-item nested-1">Item 2.2</div>
-        <div id="item-2.3" data-id="2.3" class="list-group-item nested-1">Item 2.3</div>
-        <div id="item-2.4" data-id="2.4" class="list-group-item nested-1">Item 2.4</div>
-        <div id="item-2.5" data-id="2.5" class="list-group-item nested-1">Item 2.5</div>
+      
+      <div class="col">
+	<h3>Game Timeline</h3>
+	<div id="timeline" class="list-group">
+	</div>
       </div>
     </div>
     <button id="get-order" >Get Order</button>
@@ -41,25 +47,47 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script>
 <script>
   // List 1
-  $('#items-1').sortable({
-      group: 'list',
+  $('#widgets').sortable({
+      group: {
+          name: 'shared',
+          pull: 'clone', // To clone: set pull to 'clone'
+	  put: false
+      },
       animation: 200,
       ghostClass: 'ghost',
+      sort: false
   });
 
   // List 2
-  $('#items-2').sortable({
-      group: 'list',
+  $('#timeline').sortable({
+      group: 'shared',
       animation: 200,
       ghostClass: 'ghost',
+      onSort: reportActivity
   });
 
-  // Arrays of "data-id"
+  var widget_id = 0;
+
+  function get_timeline() {
+      let arr = [];
+      
+      for (elem of $('#timeline')[0].children)
+	  arr.push(elem.id);
+
+      return arr;
+  }
+
   $('#get-order').click(function() {
-      var sort1 = $('#items-1').sortable('toArray');
-      console.log(sort1);
-      var sort2 = $('#items-2').sortable('toArray');
-      console.log(sort2);
-  }); 
+      console.log(get_timeline())
+  });
+
+  // Report when the sort order has changed
+  function reportActivity(e) {
+      if (e.pullMode == 'clone') {
+	  console.log(e);
+	  e.item.id += '-' + widget_id;
+	  widget_id++;
+      }
+  };
 </script>
 {% endblock %}
