@@ -180,16 +180,16 @@ def validateWidget():
             verity = False
 
     elif request.form['widget_type'] == 'choice':
-        if not request.form['contents']:
+        if not request.form['contents'] or not request.form['answer']:
             verity = False
 
     elif request.form['widget_type'] == 'timer':
-        if not request.form['value'] or not isinstance(request.form['value'], int):
+        if not request.form['time'] or not isinstance(request.form['time'], int):
             verity = False
     else:
         flash("Invalid Widget Type**DEBUG ERROR")
 
-    return { 'verity': verity }
+    return {'verity': verity}
 
 
 @app.route("/generateWidgets", methods=["GET", "POST"])
@@ -209,16 +209,18 @@ def generateWidgets():
             response[widget_id] = widgets.get_widget(app.client, widget_id)
 
         elif field['widget_type'] == 'choice':
-            widget_id = widgets.create_choice_widget(app.client, field['contents'])
+            widget_id = widgets.create_choice_widget(app.client, field['contents'], field['answer'])
             response[widget_id] = widgets.get_widget(app.client, widget_id)
 
         elif field['widget_type'] == 'timer':
-            flash("Implement this my boi")
+            widget_id = widgets.create_timer_widget(app.client, field['time'])
+            response[widget_id] = widgets.get_widget(app.client, widget_id)
 
         else:
             flash("Invalid Widget Type**DEBUG ERROR")
 
     return response
+
 
 @app.route("/auth", methods=["POST", "GET"])
 def auth():
