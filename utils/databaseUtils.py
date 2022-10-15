@@ -52,6 +52,61 @@ def create_room(client, key, host, players, game):
 
     return room.inserted_id
 
+# `fact` => one correct answer
+# `opinion` => no correct answer
+
+def create_fact_multiple_choice(client, prompt, correct_answer, fake_answers, tags):
+    db = client.Questions
+    qs = db.fact_mc
+    
+    question = qs.insert_one({
+        "prompt": prompt,
+        "correct_answer": correct_answer,
+        "fake_answers": fake_answers,
+        "tags": tags,
+    })
+    
+    return question.inserted_id
+
+def create_opinion_multiple_choice(client, prompt, choices, tags):
+    db = client.Questions
+    qs = db.opinion_mc
+    
+    question = qs.insert_one({
+        "prompt": prompt,
+        "choices": choices,
+        "tags": tags,
+    })
+    
+    return question.inserted_id
+
+
+def create_fact_free_response(client, prompt, correct_answer, tags):
+    db = client.Questions
+    qs = db.fact_fr
+    
+    question = qs.insert_one({
+        "prompt": prompt,
+        "correct_answer": correct_answer,
+        "tags": tags,
+    })
+    
+    return question.inserted_id
+
+
+def get_fact_multiple_choices_by_tag(client, tag):
+    db = client.Questions
+    qs = db.fact_mc
+    
+    return qs.find({"tags": tag})
+
+
+def get_opinion_multiple_choices_by_tag(client, tag):
+    db = client.Questions
+    qs = db.opinion_mc
+    
+    return qs.find({"tags": tag})
+
 
 def get_room_by_key(client, key):
     db = client.Rooms
