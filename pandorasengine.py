@@ -61,6 +61,9 @@ def login():
 @app.route('/logout')
 def logout():
     if 'user' in session:
+        room = databaseUtils.get_user_by_id(app.client, session['user'])['room']
+        databaseUtils.delete_room(app.client, room)
+        databaseUtils.clear_user_room(app.client, session['username'])
         session.pop('user')
     return redirect(url_for('login'))
 
@@ -97,13 +100,16 @@ def addRoom():
         if not databaseUtils.get_room_by_key(app.client, key):
             break
 
+    databaseUtils.clear_user_room(app.client, session['user'])
     databaseUtils.create_room(app.client, key, session['user'], [databaseUtils.get_user_by_id(app.client, session["user"])], game)
-
+    databaseUtils.add_room_to_user(app.client, session['username'], key)
     return redirect(url_for("room", key=key))
+
 
 @app.route("/editor")
 def editor():
     return render_template("editor.html")
+
 
 @app.route("/widget/new/text", methods=['POST'])
 def widget_new_text():
@@ -112,12 +118,14 @@ def widget_new_text():
 
     return str(widgets.create_text_widget(app.client, request.form['text']))
 
+
 @app.route("/widget")
 def widget():
     if 'widget_id' not in request.args:
         return None # Error
 
     return widgets.get_widget(app.client, request.args['widget_id'])
+
 
 @app.route("/joinRoom", methods=["POST"])
 def joinRoom():
@@ -146,6 +154,7 @@ def imgUP():
 def game():
     # TODO: send initial widget
     return render_template("game.html")
+
 
 @app.route("/auth", methods=["POST", "GET"])
 def auth():

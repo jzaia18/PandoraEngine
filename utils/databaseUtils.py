@@ -69,7 +69,7 @@ def create_user(client, username, password):
         user = users.insert_one({
             "username": username,
             "password": hash_password(username, password),
-            "postId": []})
+            "room": None})
         return user.inserted_id
     return None
 
@@ -88,6 +88,21 @@ def get_user_by_id(client, userid):
     users = db.users
 
     return users.find_one({"_id": ObjectId(userid)})
+
+
+def add_room_to_user(client, username, key):
+    db = client.Users
+    users = db.users
+    print("ADD ROOM " + key + " TO USER " + username)
+
+    return users.update_one({"username": username}, {"$set": {"room": key}})
+
+
+def clear_user_room(client, username):
+    db = client.Users
+    users = db.users
+
+    return users.update_one({"username": username}, {"$set": {"room": None}})
 
 
 # constructs the value for a password key
