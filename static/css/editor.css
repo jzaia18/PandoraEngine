@@ -9,3 +9,11 @@
 #timeline {
     min-height: 100px;
 }
+
+.handle {
+    max-width: 50px;
+}
+
+.handle:hover {
+    
+}

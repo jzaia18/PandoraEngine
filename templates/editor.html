@@ -22,10 +22,18 @@
       <div class="col">
 	<h3>Available Widgets</h3>
 	<div id="widgets" class="list-group">
-          <div id="widget-text" data-id="widget-text" class="list-group-item nested-1">Text Widget</div>
-          <div id="widget-text_input" data-id="widget-text_input" class="list-group-item nested-1">Text Input Widget</div>
-          <div id="widget-choice" data-id="widget-choice" class="list-group-item nested-1">Choice Widget</div>
-          <div id="widget-image" data-id="widget-image" class="list-group-item nested-1">Image Widget</div>
+          <div id="widget-text" data-id="widget-text" class="list-group-item nested-1">
+	    <p><img class="handle" src="/static/img/drag-handle.png" />Text Widget</p>
+	  </div>
+          <div id="widget-text_input" data-id="widget-text_input" class="list-group-item nested-1">
+	    <p>Text Input Widget</p>
+	  </div>
+          <div id="widget-choice" data-id="widget-choice" class="list-group-item nested-1">
+	    <p>Choice Widget</p>
+	  </div>
+          <div id="widget-image" data-id="widget-image" class="list-group-item nested-1">
+	    <p>Image Widget</p>
+	  </div>
 	</div>
       </div>
       
@@ -55,6 +63,7 @@
       },
       animation: 200,
       ghostClass: 'ghost',
+      handle: '.handle',
       sort: false
   });
 
@@ -63,6 +72,7 @@
       group: 'shared',
       animation: 200,
       ghostClass: 'ghost',
+      handle: '.handle',
       onSort: reportActivity
   });
 
@@ -81,12 +91,25 @@
       console.log(get_timeline())
   });
 
+  function create_widget_info(widget_type) {
+      
+  }
+
   // Report when the sort order has changed
   function reportActivity(e) {
       if (e.pullMode == 'clone') {
 	  console.log(e);
 	  e.item.id += '-' + widget_id;
 	  widget_id++;
+
+	  $('#' + e.item.id).append($('<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"> \
+		  Button with data-bs-target \
+	      </button> \
+	      <div class="collapse" id="collapseExample"> \
+		  <div class="card card-body"> \
+		  Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger. \
+		  </div> \
+		  </div>'));
       }
   };
 </script>
