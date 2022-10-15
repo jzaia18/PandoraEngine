@@ -30,9 +30,10 @@ def require_login(f):
 
 app = Flask(__name__)
 app.secret_key = os.urandom(16)
+app.client = pymongo.MongoClient("mongodb+srv://admin:pass@cluster0.idxdfmn.mongodb.net/?retryWrites=true&w=majority")
+app.debug = True
 Bootstrap(app)
 
-client = pymongo.MongoClient("mongodb+srv://admin:pass@cluster0.idxdfmn.mongodb.net/?retryWrites=true&w=majority")
 
 @app.template_global()
 def modify_query(origin, **new_values):
@@ -127,10 +128,10 @@ def auth():
         return redirect(url_for('login'))
 
     if request.form['submit'] == 'Login':
-        user = databaseUtils.authenticate(client, request.form['user'], request.form['pwd'])
+        user = databaseUtils.authenticate(app.client, request.form['user'], request.form['pwd'])
         if user:
             session['user'] = str(user)
-            session['username'] = databaseUtils.get_user_by_id(client, user)['username']
+            session['username'] = databaseUtils.get_user_by_id(app.client, user)['username']
             session.permanent = True
             app.permanent_session_lifetime = timedelta(minutes=30)
             return redirect(url_for('root'))
@@ -138,10 +139,10 @@ def auth():
             flash('Incorrect username or password')
             return redirect(url_for('login'))
     else:
-        success = databaseUtils.create_user(client, request.form['user'], request.form['pwd'])
+        success = databaseUtils.create_user(app.client , request.form['user'], request.form['pwd'])
         if success:
             session['user'] = str(success)
-            session['username'] = databaseUtils.get_user_by_id(client, success)['username']
+            session['username'] = databaseUtils.get_user_by_id(app.client, success)['username']
             session.permanent = True
             app.permanent_session_lifetime = timedelta(minutes=30)
             return redirect(url_for('root'))
