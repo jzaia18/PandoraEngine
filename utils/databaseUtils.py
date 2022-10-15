@@ -5,13 +5,6 @@ import pymongo as pymongo
 import base64
 import gridfs
 
-client = pymongo.MongoClient("mongodb+srv://admin:pass@cluster0.idxdfmn.mongodb.net/?retryWrites=true&w=majority")
-db = client.Users
-users = db.users
-posts = db.posts
-reports = db.reports
-fs = gridfs.GridFS(db)
-
 
 def upload_blob(bucket_name, source_file_name, destination_blob_name):
     # bucket_name = "your-bucket-name"
@@ -34,8 +27,11 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
 
 
 # creates a user in the database with a username, password, and post id
-def create_user(username, password):
-    if get_user_by_name(username) is None:
+def create_user(client, username, password):
+    db = client.Users
+    users = db.users
+
+    if get_user_by_name(client, username) is None:
         user = users.insert_one({
             "username": username,
             "password": hash_password(username, password),
@@ -45,12 +41,18 @@ def create_user(username, password):
 
 
 # gets the username of a user
-def get_user_by_name(username):
+def get_user_by_name(client, username):
+    db = client.Users
+    users = db.users
+
     return users.find_one({"username": username})
 
 
 # gets the id of a user
-def get_user_by_id(userid):
+def get_user_by_id(client, userid):
+    db = client.Users
+    users = db.users
+
     return users.find_one({"_id": ObjectId(userid)})
 
 
@@ -60,26 +62,11 @@ def hash_password(username, password):
 
 
 # provides the information needed for a user to sign in
-def authenticate(username, password):
-    user = get_user_by_name(username)
+def authenticate(client, username, password):
+    user = get_user_by_name(client, username)
     if user is None:
         return
     if hash_password(username, password) != user["password"]:
         return
     return user["_id"]
 
-
-# adds a new report to the database
-def add_report(report):
-    (print(report))
-    reports.insert_one({"description": report})
-
-
-# upgrades a normal user to an admin
-def user_admin(userid):
-    return None
-
-
-# returns a picture (image file)
-def get_picture(picture):
-    return fs.get(picture).read()
