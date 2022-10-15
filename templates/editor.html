@@ -7,7 +7,7 @@
 
 {% block body %}
 <div class="center-block">
-  <div class="card">
+  <div class="main-center-card card">
     <form action='/widget/new/text' method='POST'>
       <input type='text' name='text' />
       <input type='submit' />
@@ -23,16 +23,28 @@
 	<h3>Available Widgets</h3>
 	<div id="widgets" class="list-group">
           <div id="widget-text" data-id="widget-text" class="list-group-item nested-1">
-	    <p><img class="handle" src="/static/img/drag-handle.png" />Text Widget</p>
+	    <p class="widget-handle-title">
+	      <img class="handle" src="/static/img/drag-handle.png" />
+	      Text Widget
+	    </p>
 	  </div>
           <div id="widget-text_input" data-id="widget-text_input" class="list-group-item nested-1">
-	    <p>Text Input Widget</p>
+	    <p class="widget-handle-title">
+	      <img class="handle" src="/static/img/drag-handle.png" />
+	      Text Input Widget
+	    </p>
 	  </div>
           <div id="widget-choice" data-id="widget-choice" class="list-group-item nested-1">
-	    <p>Choice Widget</p>
+	    <p class="widget-handle-title">
+	      <img class="handle" src="/static/img/drag-handle.png" />
+	      Choice Widget
+	    </p>
 	  </div>
           <div id="widget-image" data-id="widget-image" class="list-group-item nested-1">
-	    <p>Image Widget</p>
+	    <p class="widget-handle-title">
+	      <img class="handle" src="/static/img/drag-handle.png" />
+	      Image Widget
+	    </p>
 	  </div>
 	</div>
       </div>
@@ -102,14 +114,14 @@
 	  e.item.id += '-' + widget_id;
 	  widget_id++;
 
-	  $('#' + e.item.id).append($('<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"> \
-		  Button with data-bs-target \
+	  $('#' + e.item.id).append($('<button class="btn btn-primary widget-drop-control" type="button" data-bs-toggle="collapse" data-bs-target="#options-' + e.item.id + '" aria-expanded="false" aria-controls="options-' + e.item.id + '"> \
+		  Drop \
 	      </button> \
-	      <div class="collapse" id="collapseExample"> \
+	      <div class="collapse" id="options-' + e.item.id + '"> \
 		  <div class="card card-body"> \
 		  Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger. \
 		  </div> \
-		  </div>'));
+	      </div>'));
       }
   };
 </script>
