@@ -1,19 +1,19 @@
 from _sha256 import sha256
 from bson import ObjectId
-#from google.cloud import storage
+from google.cloud import storage
 import pymongo as pymongo
 import base64
 import gridfs
 
-client = pymongo.MongoClient("mongodb+srv://admin:pass@thecommunityproject-lawyq.gcp.mongodb.net/test?retryWrites=true&w=majority")
+client = pymongo.MongoClient("mongodb+srv://admin:pass@cluster0.idxdfmn.mongodb.net/?retryWrites=true&w=majority")
 db = client.Users
 users = db.users
 posts = db.posts
 reports = db.reports
 fs = gridfs.GridFS(db)
 
-"""
-def upload_blob(bucket_name, source_file_name, destination_blob_name):
+
+def upload_blob(bucket_name="pandora-engine-bucket", source_file_name="", destination_blob_name=""):
     # bucket_name = "your-bucket-name"
     # source_file_name = "local/path/to/file"
     # destination_blob_name = "storage-object-name"
@@ -31,7 +31,6 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
     )
 
     return "https://storage.cloud.google.com/communityproject-images/" + destination_blob_name
-"""
 
 
 # creates a user in the database with a username, password, and post id
