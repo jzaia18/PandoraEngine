@@ -118,8 +118,7 @@ def imgUP():
     return redirect(url_for("", img_url=url))
 
 
-
-@app.route("/auth", methods=["POST"])
+@app.route("/auth", methods=["POST", "GET"])
 def auth():
     if "submit" not in request.form or "user" not in request.form or "pwd" not in request.form:
         flash("At least one form input was incorrect")
