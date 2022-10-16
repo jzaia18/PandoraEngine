@@ -3,7 +3,7 @@ import json
 import os
 from datetime import timedelta
 from functools import wraps
-from random import randint, choice
+from random import randint, choices
 import pymongo as pymongo
 from bson import ObjectId
 
@@ -79,7 +79,7 @@ def get_room_players(key):
     room_data = databaseUtils.get_room_by_key(app.client, key)
     if not room_data:
         return '', 400
-    if all(session['user'] != str(player['_id']) for player in room_data['players']):
+    if not databaseUtils.user_in_room(app.client, room_data, session['user']):
         return '', 403
     return jsonify([player['username'] for player in room_data['players']])
 
@@ -89,7 +89,7 @@ def get_room_state(key):
     room_data = databaseUtils.get_room_by_key(app.client, key)
     if not room_data:
         return '', 400
-    if all(session['user'] != str(player['_id']) for player in room_data['players']):
+    if not databaseUtils.user_in_room(app.client, room_data, session['user']):
         return '', 403
     
     if room_data['current_widget'] == -1:
@@ -97,8 +97,11 @@ def get_room_state(key):
             'widget_index': -1,
             'players': [player['username'] for player in room_data['players']],
         }
-    
-    widget = widgets.get_widget(app.client, room_data['game'])
+    print(room_data)
+    game = databaseUtils.get_game_by_id(app.client, room_data['game'])
+    print(game)
+    widget = widgets.get_widget(app.client, game['widgets'][room_data['current_widget']])
+    widget['_id'] = str(widget['_id'])
     return {
         'widget_index': room_data['current_widget'],
         'widget': widget,
@@ -109,9 +112,10 @@ def get_room_state(key):
 def room(key):
     room_data = databaseUtils.get_room_by_key(app.client, key)
     if room_data:
-        databaseUtils.add_user_to_room(app.client, key, databaseUtils.get_user_by_id(app.client, session['user']))
-        return render_template("room.html", room_data=room_data,
-            is_host = session['user'] == room_data['host'])
+        is_host = session['user'] == room_data['host']
+        if not is_host:
+            databaseUtils.add_user_to_room(app.client, key, databaseUtils.get_user_by_id(app.client, session['user']))
+        return render_template("room.html", room_data=room_data, is_host = is_host)
     flash("Room does not exist!")
     return redirect(url_for('join'))
 
@@ -125,7 +129,7 @@ def startRoom(key):
     if room_data['host'] != session['user'] or room_data['current_widget'] != -1:
         return '', 403
     databaseUtils.inc_room_widget(app.client, key)
-    response = redirect(url_for(f"/room/{key}/state"))
+    response = redirect(url_for("get_room_state", key=key))
     response.mimetype = "application/json"
     return response
 
@@ -141,16 +145,12 @@ def createRoom():
 @require_login
 def addRoom():
     key = []
-    game = databaseUtils.get_game_by_id(app.client, request.form['gameID'])
-    while True:
-        for i in range(4):
-            key.append(choice(gameUtils.alphanumeric))
-        key = ''.join(key)
-        if not databaseUtils.get_room_by_key(app.client, key):
-            break
-
+    # game = databaseUtils.get_game_by_id(app.client, request.form['gameID'])
+    gameID = ObjectId(request.form['gameID'])
+    key = ''.join(choices(gameUtils.alphanumeric, k=4))
+    
     databaseUtils.clear_user_room(app.client, session['user'])
-    databaseUtils.create_room(app.client, key, session['user'], [], game)
+    databaseUtils.create_room(app.client, key, session['user'], [], gameID)
     databaseUtils.add_room_to_user(app.client, session['username'], key)
     return redirect(url_for("room", key=key))
 

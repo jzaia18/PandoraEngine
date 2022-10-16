@@ -44,7 +44,7 @@ def get_game_by_id(client, _id):
     db = client.Games
     games = db.games
 
-    return games.find_one({"_id": _id})
+    return games.find_one({"_id": ObjectId(_id)})
 
 
 def get_games(client):
@@ -67,6 +67,10 @@ def create_room(client, key, host, players, game):
     })
 
     return room.inserted_id
+
+
+def user_in_room(client, room_data, user_id):
+    return room_data['host'] == user_id or any(user_id == str(player['_id']) for player in room_data['players'])
 
 
 def inc_room_widget(client, key):

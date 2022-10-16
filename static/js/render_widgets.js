@@ -1,6 +1,6 @@
 container = $("#widget-container");
 
-function updateWidget() {
+function displayWidget(activeWidget, isHost=false) {
     switch (activeWidget.widget_type) {
         case "text":
             e = $("<p>").append(activeWidget.contents);
@@ -11,12 +11,14 @@ function updateWidget() {
         case "text_input":
             e = $("<div>")
                 .append($("<p>").append(activeWidget.contents.prompt))
-                .append($("<br>"))
+            if (!isHost) {
+                e.append($("<br>"))
                 .append(
                     $("<form>").attr("action", "")
                         .append("<input>").attr("type", "text").attr("name", "response")
                     )
                 .append("<input>").attr("type", "submit")
+            }
             break;
         case "choice":
             e = $("<div")
@@ -29,4 +31,4 @@ function updateWidget() {
     container.empty().append(e);
 }
 
-$(document).ready(updateWidget);
+// $(document).ready(updateWidget);

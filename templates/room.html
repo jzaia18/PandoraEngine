@@ -6,7 +6,7 @@
 
 {% block body %}
     <center>
-        <div>
+        <div id="pre-game">
             <label> Players currently in the room </label>
             <ul id="player-list" class="list-group">
                 {% for player in room_data['players'] %}
@@ -18,15 +18,20 @@
             {% endif %}
         </div>
     </center>
+    <div id="widget-container" class="center-block">
+      
+    </div>
 
 {% endblock %}
 
 {% block js %}
+<script src="/static/js/render_widgets.js"></script>
 <script>
     // updates playerlist whenever a player is added
     // we do not care for players being removed yet
     let playerList = $("#player-list")
     let players = []
+    let isHost = {{ is_host|string|lower }};
     var prsIntervalId = -1
     
     function refreshPlayerList(initialCall) {
@@ -71,12 +76,12 @@
     }
     
     function switch_to_widget_view() {
-        console.log("widget view!");
+        $("#pre-game").css("display", "none");
     }
     
+    
     function displayRoomState(room_state) {
-        console.log("gonna display:");
-        console.log(room_state);
+        displayWidget(room_state.widget, isHost);
     }
 
 </script>
