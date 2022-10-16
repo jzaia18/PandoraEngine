@@ -69,6 +69,7 @@ def logout():
 
 
 @app.route("/join")
+@require_login
 def join():
     return render_template("joinRoom.html")
 
