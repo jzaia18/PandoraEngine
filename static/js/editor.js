@@ -84,7 +84,8 @@ function post_timeline() {
 				url: "/addGame",
 				data: game_data,
 				success: function(e) {
-					console.log(e)
+					console.log(e);
+					window.location = '/';
 				},
 				error: function (e) {
 					alert(JSON.stringify(e))
@@ -177,6 +178,10 @@ function create_widget_info(widget_type, widget_id) {
     return content
 }
 
+function removeItem(widget) {
+	$('#' + widget).remove();
+}
+
 // Report when the sort order has changed
 function reportActivity(e) {
     if (e.pullMode == 'clone') {
@@ -188,12 +193,13 @@ function reportActivity(e) {
 	widget_id++;
 
 	$('#' + e.item.id).append($('<button class="btn btn-primary widget-drop-control" type="button" data-bs-toggle="collapse" data-bs-target="#options-' + e.item.id + '" aria-expanded="false" aria-controls="options-' + e.item.id + '"> \
-		  Drop \
+		  Info \
 	      </button> \
 	      <div class="collapse" id="options-' + e.item.id + '"> \
 		  <div class="card card-body"> \
 		  ' + widget_controls + '\
 		  </div> \
+		  <button onclick="removeItem(\'' + e.item.id + '\')">Remove</button>\
 	      </div>'));
     }
 };

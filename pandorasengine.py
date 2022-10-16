@@ -247,7 +247,7 @@ def addGame():
     if name and max_players and widgets:
         databaseUtils.create_game(app.client, name, max_players, widgets)
         flash("Game Created Successfully!")
-        return redirect(url_for('createRoom'))
+        return {}
 
     abort(400)
 
