@@ -13,9 +13,6 @@
                     <li class="list-group-item">{{ player['username'] }}</li>
                 {% endfor %}
             </ul>
-            {% if is_host %}
-            <button onclick="startGame();">Start Game</button>
-            {% endif %}
         </div>
     </center>
     <div class="center-block">
@@ -23,7 +20,9 @@
         
         </div>
     </div>
-
+    {% if is_host %}
+    <button class="main-page-btn btn" onclick="nextScene();">Next</button>
+    {% endif %}
 {% endblock %}
 
 {% block js %}
@@ -64,10 +63,10 @@
     var plIntervalId = setInterval(refreshPlayerList, 1000);
     
     {% if is_host %}
-    function startGame() {
-        $.ajax(window.location.href + "/begin")
+    function nextScene() {
+        $.ajax(window.location.href + "/next")
             // .success(switch_to_game_view)
-            .fail(startGame);
+            .fail(nextScene);
     }
     {% endif %}
     

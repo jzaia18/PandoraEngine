@@ -137,3 +137,34 @@ label {
 textarea {
     min-width: 80%;
 }
+
+
+.main-page-btn {
+    border-style: none;
+    margin: 3vh;
+    color: white;
+    font: larger;
+    max-width: 90vw;
+    max-height: 10vh;
+    min-width: 200px;
+    min-height: 50px;
+    width: 100%;
+    height: 10vh;
+    display: block;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media screen and (min-width: 800px) {
+    .main-page-btn {
+        width: 50vw;
+    }
+}
+
+.main-page-btn:hover {
+    border-style: none;
+    color: #e11f68;
+    font: larger;
+    background-color: #33103a;
+}
