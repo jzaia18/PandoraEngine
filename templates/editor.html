@@ -8,16 +8,6 @@
 {% block body %}
 <div class="center-block">
   <div class="main-center-card card">
-    <form action='/widget/new/text' method='POST'>
-      <input type='text' name='text' />
-      <input type='submit' />
-    </form>
-
-    <form action='/widget'>
-      <input type='text' name='widget_id' />
-      <input type='submit' />
-    </form>
-
     <div id="demo" class="row">
       <div class="col">
 	<h3>Available Widgets</h3>
@@ -28,16 +18,23 @@
 	      Text Widget
 	    </p>
 	  </div>
+          <div id="widget-choice" data-id="widget-choice" class="list-group-item nested-1">
+	    <p class="widget-handle-title">
+	      <img class="handle" src="/static/img/drag-handle.png" />
+	      Choice Widget -- Pre-set
+	    </p>
+	  </div>
+          <div id="widget-choice-rand" data-id="widget-choice-rand" class="list-group-item nested-1">
+	    <p class="widget-handle-title">
+	      <img class="handle" src="/static/img/drag-handle.png" />
+	      Randomized Choice Widget -- Pre-set
+	    </p>
+	  </div>
+	  <!--
           <div id="widget-text_input" data-id="widget-text_input" class="list-group-item nested-1">
 	    <p class="widget-handle-title">
 	      <img class="handle" src="/static/img/drag-handle.png" />
 	      Text Input Widget
-	    </p>
-	  </div>
-          <div id="widget-choice" data-id="widget-choice" class="list-group-item nested-1">
-	    <p class="widget-handle-title">
-	      <img class="handle" src="/static/img/drag-handle.png" />
-	      Choice Widget
 	    </p>
 	  </div>
           <div id="widget-image" data-id="widget-image" class="list-group-item nested-1">
@@ -46,6 +43,7 @@
 	      Image Widget
 	    </p>
 	  </div>
+	  -->
 	</div>
       </div>
       
@@ -65,81 +63,5 @@
 {% block js %}
 <script src="https://unpkg.com/sortablejs-make/Sortable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script>
-<script>
-  // List 1
-  $('#widgets').sortable({
-      group: {
-          name: 'shared',
-          pull: 'clone', // To clone: set pull to 'clone'
-	  put: false
-      },
-      animation: 200,
-      ghostClass: 'ghost',
-      handle: '.handle',
-      sort: false
-  });
-
-  // List 2
-  $('#timeline').sortable({
-      group: 'shared',
-      animation: 200,
-      ghostClass: 'ghost',
-      handle: '.handle',
-      onSort: reportActivity
-  });
-
-  var widget_id = 0;
-
-  function get_timeline() {
-      let arr = [];
-      
-      for (elem of $('#timeline')[0].children)
-	  arr.push(elem.id);
-
-      return arr;
-  }
-
-  $('#get-order').click(function() {
-      console.log(get_timeline())
-  });
-
-  function create_widget_info(widget_type, widget_id) {
-      var widget_name = 'widget-' + widget_type + '-' +  widget_id;
-      var content = '<form id="form-' + widget_name + '">';
-      content += '<label for="timer-' + widget_name + '">Time (s):</label>';
-      content += '<input id="timer-' + widget_name + '" type="number" value=30 min=0 max=999 /><br />';
-      
-      switch (widget_type) {
-      case 'text':
-	  content += '<label for="content-' + widget_name + '">Display Text:</label>';
-          content += '<textarea id="content-' + widget_name + '"></textarea>';
-	  break;
-	  
-      }
-
-      content += '</form>';
-      return content
-  }
-
-  // Report when the sort order has changed
-  function reportActivity(e) {
-      if (e.pullMode == 'clone') {
-	  console.log(e);
-	  var widget_type = e.item.id.split('-')[1];
-	  e.item.id += '-' + widget_id;
-
-	  var widget_controls = create_widget_info(widget_type, widget_id);
-	  widget_id++;
-
-	  $('#' + e.item.id).append($('<button class="btn btn-primary widget-drop-control" type="button" data-bs-toggle="collapse" data-bs-target="#options-' + e.item.id + '" aria-expanded="false" aria-controls="options-' + e.item.id + '"> \
-		  Drop \
-	      </button> \
-	      <div class="collapse" id="options-' + e.item.id + '"> \
-		  <div class="card card-body"> \
-		  ' + widget_controls + '\
-		  </div> \
-	      </div>'));
-      }
-  };
-</script>
+<script src="/static/js/editor.js"></script>
 {% endblock %}
