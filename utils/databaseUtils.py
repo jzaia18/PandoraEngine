@@ -73,11 +73,15 @@ def user_in_room(client, room_data, user_id):
     return room_data['host'] == user_id or any(user_id == str(player['_id']) for player in room_data['players'])
 
 
-def inc_room_widget(client, key):
+def inc_room_widget(client, room_data):
     db = client.Rooms
     rooms = db.rooms
     
-    rooms.update_one({"key": key}, {'$inc': {'current_widget': 1}})
+    game = get_game_by_id(client, room_data['game'])
+    new_widget = room_data['current_widget'] + 1
+    if new_widget >= len(game['widgets']):
+        new_widget = -1
+    rooms.update_one({"_id": room_data['_id']}, {'$set': {'current_widget': new_widget}})
 
 
 # `fact` => one correct answer

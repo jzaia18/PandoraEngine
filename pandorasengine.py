@@ -126,15 +126,15 @@ def room(key):
     return redirect(url_for('join'))
 
 
-@app.route("/room/<key>/begin")
+@app.route("/room/<key>/next")
 @require_login
 def startRoom(key):
     room_data = databaseUtils.get_room_by_key(app.client, key)
     if not room_data:
         return '', 400
-    if room_data['host'] != session['user'] or room_data['current_widget'] != -1:
-        return '', 403
-    databaseUtils.inc_room_widget(app.client, key)
+    # if room_data['host'] != session['user'] or room_data['current_widget'] != -1:
+    #     return '', 403
+    databaseUtils.inc_room_widget(app.client, room_data)
     response = redirect(url_for("get_room_state", key=key))
     response.mimetype = "application/json"
     return response
