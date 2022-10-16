@@ -240,6 +240,22 @@ def generateWidgets():
     return response
 
 
+@app.route("/addGame", methods=["POST"])
+def addGame():
+    name = request.form['name']
+    max_players = request.form['maxplayers']
+    question_banks = request.form['questionbanks']
+    widgets = request.form['widgets']
+
+    if name and max_players and question_banks and widgets:
+        databaseUtils.create_game(name, max_players, question_banks, widgets)
+        flash("Game Created Successfully!")
+        return redirect(url_for('createRoom'))
+
+    flash("Error when creating game, missing parameter values")
+    redirect(request.url)
+
+
 @app.route("/auth", methods=["POST", "GET"])
 def auth():
     if "submit" not in request.form or "user" not in request.form or "pwd" not in request.form:
