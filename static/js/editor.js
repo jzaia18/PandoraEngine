@@ -25,8 +25,33 @@ var widget_id = 0;
 function get_timeline() {
     let arr = [];
     
-    for (elem of $('#timeline')[0].children)
-	arr.push(elem.id);
+    for (elem of $('#timeline')[0].children) {
+	var widget = {
+	    widget_type: elem.id.split('-')[1],
+	    timer: Number($('#timer-' + elem.id)[0].value)
+	}
+
+	if (widget.widget_type == 'text') {
+	    widget.contents = $('#content-' + elem.id)[0].value
+	}
+	arr.push(widget)
+    }
+    
+    for (widget of arr) {
+	console.log(widget);
+	continue
+	$.ajax({
+            type: "POST",
+            url: "/validateWidget",
+            data: widget,
+            success: function (data) {
+		console.log(data);
+            },
+            error: function (e) {
+		console.log(e);
+            }
+	});
+    }
 
     return arr;
 }

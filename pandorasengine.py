@@ -181,7 +181,7 @@ def game():
     return render_template("game.html", widget=widget)
 
 
-@app.route("/validateWidget", methods=["GET", "POST"])
+@app.route("/validateWidget", methods=["POST"])
 def validateWidget():
     verity = True
     if request.form['widget_type'] == 'text':
@@ -209,7 +209,7 @@ def validateWidget():
     return {'verity': verity}
 
 
-@app.route("/generateWidgets", methods=["GET", "POST"])
+@app.route("/generateWidgets", methods=["POST"])
 def generateWidgets():
     response = dict()
     for field in request.form:
@@ -234,6 +234,7 @@ def generateWidgets():
             response[widget_id] = widgets.get_widget(app.client, widget_id)
 
         else:
+            print(field)
             flash("Invalid Widget Type**DEBUG ERROR")
 
     return response
