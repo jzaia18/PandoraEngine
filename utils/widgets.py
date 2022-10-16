@@ -44,25 +44,14 @@ def create_text_input_widget(prompt, timer):
 
 
 @widget_creator
-def create_choice_widget(question, choices, answer, timer):
+def create_choice_widget(contents, choices, random, opinion, timer):
     return {
         'widget_type': 'choice',
-        'contents': {
-            'question': question,
-            'choices': choices,
-            'answer': answer,
-            'timer': timer
-        }
-    }
-
-
-@widget_creator
-def create_timer_widget(time):
-    return {
-        'widget_type': 'timer',
-        'contents': {
-            'time': time
-        }
+        'contents': contents, # Will be either tags or the question itself
+        'random': random,
+        'choices': choices, # Null for randomized questions
+        'opinion': opinion,
+        'timer': timer
     }
 
 

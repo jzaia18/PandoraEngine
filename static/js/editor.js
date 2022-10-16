@@ -33,9 +33,29 @@ function post_timeline() {
 
 	if (widget.widget_type == 'text') {
 	    widget.contents = $('#content-' + elem.id)[0].value
+	} else if (widget.widget_type == 'choice') {
+	    if (elem.id.includes('rand')) {
+		widget.contents = $('#tag-' + elem.id)[0].value;
+		widget.random = true;
+		widget.choices = null;
+	    } else {
+		var inputs = $('#answer-choices-' + elem.id + ' li input');
+		var choices = [];
+		for (input of inputs) {
+		    choices.push(input.value);
+		}
+		widget.contents = $('#prompt-' + elem.id)[0].value;
+		widget.random = false;
+		widget.choices = JSON.stringify(choices);
+	    }
+	    widget.opinion = $('#fact-opinion-' + elem.id)[0].checked;
+	    widget.timer = $('#timer-' + elem.id)[0].value;
 	}
+	
 	all_widgets[elem.id] = widget;
     }
+
+    console.log(all_widgets);
 
     var arr = [];
 
@@ -50,11 +70,10 @@ function post_timeline() {
 		url: "/generateWidgets",
 		data: all_widgets,
 		success: function (data) {
-		    console.log('Widgets created!.');
-		    console.log(data);
+		    console.log('Widgets created!');
 		},
 		error: function (e) {
-		    console.log(e)
+		    alert(JSON.stringify(e))
 		}
 	    });
 	}
@@ -76,27 +95,9 @@ function post_timeline() {
     }
 
     recurse_ajax(Object.values(all_widgets))
-
-    return
-    for (widget of Object.values(all_widgets)) {
-	var resp = $.ajax({
-            type: "POST",
-            url: "/validateWidget",
-            data: widget,
-            success: function (data) {
-		console.log('Widget validated.');
-            },
-            error: function (e) {
-		alert(JSON.stringify(e));
-            }
-	});
-
-	arr.push(resp);
-    }
-
 }
 
-$('#get-order').click(post_timeline);
+$('#submit-game').click(post_timeline);
 
 /* 
 function show_hide_div(calling_widget_name) {
@@ -117,7 +118,6 @@ function createChoiceOption(widget_id) {
 
 function addChoice(widget_id) {
     widget_id = widget_id.split('-').slice(1).join('-')
-    console.log(widget_id);
     $("#" + widget_id)[0].append($(createChoiceOption())[0]);
 }
 
@@ -161,7 +161,7 @@ function create_widget_info(widget_type, widget_id) {
 // Report when the sort order has changed
 function reportActivity(e) {
     if (e.pullMode == 'clone') {
-	console.log(e);
+	//console.log(e);
 	var widget_type = e.item.id.split('-').slice(1).join('-');
 	e.item.id += '-' + widget_id;
 

@@ -196,12 +196,10 @@ def validateWidget():
             abort(400)
 
     elif request.form['widget_type'] == 'choice':
-        if not request.form['contents'] or not request.form['answer']:
+        if not request.form['contents'] or not request.form['random'] or \
+           (not request.form['choices'] and not request.form['random']) or not request.form['opinion']:
             abort(400)
-
-    elif request.form['widget_type'] == 'timer':
-        if not request.form['time'] or not isinstance(request.form['time'], int):
-            abort(400)
+            
     else:
         flash("Invalid Widget Type**DEBUG ERROR")
 
@@ -227,7 +225,7 @@ def generateWidgets():
             response[str(widget_id)] = widgets.get_widget(app.client, widget_id)
 
         elif widget['widget_type'] == 'choice':
-            widget_id = widgets.create_choice_widget(app.client, widget['contents'], widget['answer'], widget['timer'])
+            widget_id = widgets.create_choice_widget(app.client, widget['contents'], widget['choices'] and json.loads(widget['choices']), widget['random'], widget['opinion'], widget['timer'])
             response[str(widget_id)] = widgets.get_widget(app.client, widget_id)
 
         else:
