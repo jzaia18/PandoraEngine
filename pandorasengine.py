@@ -252,9 +252,22 @@ def addGame():
 
     abort(400)
 
-@app.route("/question-submission")
-def question_submission():
-    return render_template("question-submission.html")
+
+@app.route("/questionSubmission")
+def questionSubmission():
+    return render_template("questionSubmission.html")
+
+
+@app.route("/submitQuestion", methods=["POST"])
+def submitQuestion():
+    question = request.form['question']
+    answers = request.form['answers']
+    correct = request.form['correct']
+    tags = request.form['tags'].split(",")
+    databaseUtils.create_fact_multiple_choice(app.client, question, correct, answers, tags)
+    flash("Question Submit!")
+    redirect(request.url)
+
 
 
 @app.route("/auth", methods=["POST", "GET"])
