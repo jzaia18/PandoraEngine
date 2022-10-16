@@ -333,6 +333,12 @@ def answer(key, index):
     response = app.response_class(response=data, status=400, mimetype='application/json')
     return response
 
+@app.route("/room/<key>/next")
+def move_to_next_widget(key):
+    databaseUtils.inc_room_widget(app.client, key)
+    return {}
+
+
 
 @app.route("/auth", methods=["POST", "GET"])
 def auth():
