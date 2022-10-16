@@ -3,7 +3,6 @@
 }
 
 .list-group {
-    margin: 20px;
 }
 
 #timeline {
@@ -26,4 +25,19 @@
 
 .widget-handle-title {
     display: inline;
+}
+
+.col {
+    min-width: 25vh;
+    padding: 10px;
+}
+
+.long-input {
+    width: 100%;
+}
+
+@media screen and (max-width: 520px) {
+    .list-group-item {
+        width: 95%;
+    }
 }

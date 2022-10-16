@@ -70,7 +70,7 @@ body {
 
 .main-center-card {
     background-color: rgba(225, 31, 104, 0.64);
-    padding: 50px;
+    padding: 15px;
     color: black;
     position: relative;
 }
@@ -81,6 +81,7 @@ body {
         margin-top: 10vh;
         width: 80vw;
         left: 10vw;
+        padding: 50px;
     }
 }
 
