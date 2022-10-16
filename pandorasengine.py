@@ -176,9 +176,9 @@ def game():
     # TODO: send initial widget
 
     # TEST CODE (and pass `widget=widget` to `render_template`):
-    # widget = widgets.get_widget(app.client, "634adeb7b0f28a5d9c7dd5c3")
-    # widget['_id'] = str(widget['_id'])
-    return render_template("game.html")
+    widget = widgets.get_widget(app.client, "634adeb7b0f28a5d9c7dd5c3")
+    widget['_id'] = str(widget['_id'])
+    return render_template("game.html", widget=widget)
 
 
 @app.route("/validateWidget", methods=["GET", "POST"])
