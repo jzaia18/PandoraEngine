@@ -321,17 +321,13 @@ def submitQuestion():
 @app.route("/room/<key>/submit/<index>", methods=["POST"])
 def answer(key, index):
     room = databaseUtils.get_room_by_key(app.client, key)
-    question = room['game']['widgets'][int(index)]
-
-    if request.form['answer'] == question['correct_answer']:
-        flash("Correct Answer")
-        data = {"verity": True}
-        response = app.response_class(response=data, status=200, mimetype='application/json')
-        return response
-
-    data = {"verity": False}
-    response = app.response_class(response=data, status=400, mimetype='application/json')
-    return response
+    game = databaseUtils.get_game_by_id(app.client, room['game'])
+    question = widgets.get_widget(app.client, game['widgets'][int(index)])
+    
+    if request.form['answer'] == question['choices'][0]:
+        return jsonify({"verity": True}), 200
+    
+    return jsonify({"verity": False}), 400
 
 
 @app.route("/auth", methods=["POST", "GET"])
