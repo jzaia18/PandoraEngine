@@ -6,7 +6,7 @@ from functools import wraps
 from random import randint, choice
 import pymongo as pymongo
 
-from flask import Flask, jsonify, render_template, request, redirect, flash, url_for, session
+from flask import Flask, jsonify, render_template, request, redirect, flash, url_for, session, abort
 from flask_bootstrap import Bootstrap
 from werkzeug.urls import url_encode
 
@@ -183,60 +183,60 @@ def game():
 
 @app.route("/validateWidget", methods=["POST"])
 def validateWidget():
-    verity = True
     if request.form['widget_type'] == 'text':
         if not request.form['contents']:
-            verity = False
+            abort(400)
 
     elif request.form['widget_type'] == 'image':
         if not request.form['contents']:
-            verity = False
+            abort(400)
 
     elif request.form['widget_type'] == 'text_input':
         if not request.form['contents']:
-            verity = False
+            abort(400)
 
     elif request.form['widget_type'] == 'choice':
         if not request.form['contents'] or not request.form['answer']:
-            verity = False
+            abort(400)
 
     elif request.form['widget_type'] == 'timer':
         if not request.form['time'] or not isinstance(request.form['time'], int):
-            verity = False
+            abort(400)
     else:
         flash("Invalid Widget Type**DEBUG ERROR")
 
-    return {'verity': verity}
+    return {}
 
 
 @app.route("/generateWidgets", methods=["POST"])
 def generateWidgets():
     response = dict()
     for field in request.form:
-        if field['widget_type'] == 'text':
-            widget_id = widgets.create_text_widget(app.client, field['contents'], field['timer'])
-            response[widget_id] = widgets.get_widget(app.client, widget_id)
+        widget = json.loads(request.form[field])
+        
+        if widget['widget_type'] == 'text':
+            widget_id = widgets.create_text_widget(app.client, widget['contents'], widget['timer'])
+            response[str(widget_id)] = widgets.get_widget(app.client, widget_id)
 
-        elif field['widget_type'] == 'image':
-            widget_id = widgets.create_image_widget(app.client, field['contents'], field['timer'])
-            response[widget_id] = widgets.get_widget(app.client, widget_id)
+        elif widget['widget_type'] == 'image':
+            widget_id = widgets.create_image_widget(app.client, widget['contents'], widget['timer'])
+            response[str(widget_id)] = widgets.get_widget(app.client, widget_id)
 
-        elif field['widget_type'] == 'text_input':
-            widget_id = widgets.create_text_input_widget(app.client, field['contents'], field['timer'])
-            response[widget_id] = widgets.get_widget(app.client, widget_id)
+        elif widget['widget_type'] == 'text_input':
+            widget_id = widgets.create_text_input_widget(app.client, widget['contents'], widget['timer'])
+            response[str(widget_id)] = widgets.get_widget(app.client, widget_id)
 
-        elif field['widget_type'] == 'choice':
-            widget_id = widgets.create_choice_widget(app.client, field['contents'], field['answer'], field['timer'])
-            response[widget_id] = widgets.get_widget(app.client, widget_id)
-
-        elif field['widget_type'] == 'timer':
-            widget_id = widgets.create_timer_widget(app.client, field['time'])
-            response[widget_id] = widgets.get_widget(app.client, widget_id)
+        elif widget['widget_type'] == 'choice':
+            widget_id = widgets.create_choice_widget(app.client, widget['contents'], widget['answer'], widget['timer'])
+            response[str(widget_id)] = widgets.get_widget(app.client, widget_id)
 
         else:
             print(field)
             flash("Invalid Widget Type**DEBUG ERROR")
 
+    for widget in response.values():
+        widget['_id'] = str(widget['_id'])
+        
     return response
 
 
