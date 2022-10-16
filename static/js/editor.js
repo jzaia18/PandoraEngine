@@ -162,7 +162,7 @@ function create_widget_info(widget_type, widget_id) {
 	}
 	else {
 	    content += '<label for="prompt-' + widget_name + '">Question:</label>';
-	    content += '<input type="text" id="prompt-' + widget_name + '" />';
+	    content += '<input type="text" class="long-input" id="prompt-' + widget_name + '" />';
 
 	    content += '<div id="answers-' + widget_name + '">';
 	    content += '<p>Enter the possible answer choices, the 1st is the correct answer (if not an opinion game)</p>';
