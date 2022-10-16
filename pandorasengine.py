@@ -315,7 +315,7 @@ def submitQuestion():
     return redirect(url_for("questionSubmission"))
 
 
-@app.route("room/<key>/<index>", methods=["POST"])
+@app.route("/room/<key>/submit/<index>", methods=["POST"])
 def answer(key, index):
     room = databaseUtils.get_room_by_key(app.client, key)
     question = room['game']['widgets'][int(index)]
