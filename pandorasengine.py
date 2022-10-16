@@ -77,11 +77,32 @@ def join():
 @require_login
 def get_room_players(key):
     room_data = databaseUtils.get_room_by_key(app.client, key)
-    if not room_data or all(session['user'] != str(player['_id']) for player in room_data['players']):
-        flash("Invalid playerlist request")
-        return redirect(request.url_root)
+    if not room_data:
+        return '', 400
+    if all(session['user'] != str(player['_id']) for player in room_data['players']):
+        return '', 403
     return jsonify([player['username'] for player in room_data['players']])
+
+@app.route("/room/<key>/state")
+@require_login
+def get_room_state(key):
+    room_data = databaseUtils.get_room_by_key(app.client, key)
+    if not room_data:
+        return '', 400
+    if all(session['user'] != str(player['_id']) for player in room_data['players']):
+        return '', 403
     
+    if room_data['current_widget'] == -1:
+        return {
+            'widget_index': -1,
+            'players': [player['username'] for player in room_data['players']],
+        }
+    
+    widget = widgets.get_widget(app.client, room_data['game'])
+    return {
+        'widget_index': room_data['current_widget'],
+        'widget': widget,
+    }
 
 @app.route("/room/<key>")
 @require_login
@@ -89,9 +110,25 @@ def room(key):
     room_data = databaseUtils.get_room_by_key(app.client, key)
     if room_data:
         databaseUtils.add_user_to_room(app.client, key, databaseUtils.get_user_by_id(app.client, session['user']))
-        return render_template("room.html", room_data=room_data)
+        return render_template("room.html", room_data=room_data,
+            is_host = session['user'] == room_data['host'])
     flash("Room does not exist!")
     return redirect(url_for('join'))
+
+
+@app.route("/room/<key>/begin")
+@require_login
+def startRoom(key):
+    room_data = databaseUtils.get_room_by_key(app.client, key)
+    if not room_data:
+        return '', 400
+    if room_data['host'] != session['user'] or room_data['current_widget'] != -1:
+        return '', 403
+    databaseUtils.inc_room_widget(app.client, key)
+    response = redirect(url_for(f"/room/{key}/state"))
+    response.mimetype = "application/json"
+    return response
+
 
 
 @app.route("/createRoom")

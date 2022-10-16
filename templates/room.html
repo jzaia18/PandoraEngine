@@ -13,6 +13,9 @@
                     <li class="list-group-item">{{ player['username'] }}</li>
                 {% endfor %}
             </ul>
+            {% if is_host %}
+            <button onclick="startGame();">Start Game</button>
+            {% endif %}
         </div>
     </center>
 
@@ -24,13 +27,21 @@
     // we do not care for players being removed yet
     let playerList = $("#player-list")
     let players = []
+    var prsIntervalId = -1
     
     function refreshPlayerList(initialCall) {
-        $.ajax(window.location.href + "/players", {
+        $.ajax(window.location.href + "/state", {
             'dataType': 'json',
         })
-            .done((newPlayers) => {
-                console.log(newPlayers);
+            .done((obj) => {
+                if (obj.widget_index != -1) {
+                    clearInterval(plIntervalId);
+                    prsIntervalId = setInterval(pollRoomState, 1000);
+                    switch_to_widget_view();
+                    displayRoomState(obj);
+                    return;
+                }
+                newPlayers = obj.players
                 if (initialCall) playerList.empty();
                 for (var i = players.length; i < newPlayers.length; i++) {
                     playerList.append(
@@ -40,9 +51,33 @@
                 }
                 players = newPlayers;
             })
-            .always(() => setTimeout(refreshPlayerList, 1000));
         
     }
     refreshPlayerList(true);
+    var plIntervalId = setInterval(refreshPlayerList, 1000);
+    
+    {% if is_host %}
+    function startGame() {
+        $.ajax(window.location.href + "/begin")
+            // .success(switch_to_game_view)
+            .fail(startGame);
+    }
+    {% endif %}
+    
+    function pollRoomState() {
+        $.ajax(window.location.href + "/state", {
+            'dataType': 'json',
+        }).done(displayRoomState);
+    }
+    
+    function switch_to_widget_view() {
+        console.log("widget view!");
+    }
+    
+    function displayRoomState(room_state) {
+        console.log("gonna display:");
+        console.log(room_state);
+    }
+
 </script>
 {% endblock %}
