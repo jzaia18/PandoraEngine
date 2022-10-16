@@ -17,37 +17,41 @@ def widget_creator(f):
 
 
 @widget_creator
-def create_text_widget(text):
+def create_text_widget(text, timer):
     return {
         'widget_type': 'text',
-        'contents': text
+        'contents': text,
+        'timer': timer
     }
 
 
 @widget_creator
-def create_image_widget(href):
+def create_image_widget(href, timer):
     return {
         'widget_type': 'image',
-        'contents': href
+        'contents': href,
+        'timer': timer
     }
 
 
 @widget_creator
-def create_text_input_widget(prompt):
+def create_text_input_widget(prompt, timer):
     return {
         'widget_type': 'text_input',
-        'contents': prompt
+        'contents': prompt,
+        'timer': timer
     }
 
 
 @widget_creator
-def create_choice_widget(question, choices, answer):
+def create_choice_widget(question, choices, answer, timer):
     return {
         'widget_type': 'choice',
         'contents': {
             'question': question,
             'choices': choices,
-            'answer': answer
+            'answer': answer,
+            'timer': timer
         }
     }
 
