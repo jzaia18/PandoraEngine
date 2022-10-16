@@ -3,16 +3,11 @@
 {% block active_link %}home-link{% endblock %}
 
 {% block body %}
+    <img src="static/img/project-logo.png" class="logo responsive">
     <div class="center-block">
-        <div class="main-center-card card">
-            <div class= "container">
-                <h1 class="text-center">Pandora's Engine</h1>
-            </div>
-        </div>
-        <div class="main-center-card card">
-            <div class="container">
-                <h3 class="text-center"> Driven By Chaos  </h3>
-            </div>
+        <div class="btn-group-vertical">
+            <button class="main-page-btn" onclick="location.href = '/createRoom';">Join Room</button>
+            <button class="main-page-btn" onclick="location.href = '/createRoom';">Create Room</button>
         </div>
     </div>
 

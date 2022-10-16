@@ -3,11 +3,15 @@ hr {
 }
 
 body {
-    background: url("/static/img/background-tiles.png");
-    background-repeat: repeat;
+    background: url("/static/img/background-img.jpg");
+    background-size: cover;
     color: black;
 }
 
+.responsive {
+    height: auto%;
+    max-width: 35%;
+}
 
 .container {
     width: 600px;
@@ -16,7 +20,7 @@ body {
 
 .wrapper {
     margin: 5vh;
-    background-color: rgba(210, 236, 225, 0.64);
+    background-color: rgba(225, 31, 104, 0.64);
     border: 1px solid white;
     padding: 2vh;
     min-height: 80vh;
@@ -29,11 +33,15 @@ img {
 }
 
 .nav {
-    background-color: #D2ECE1;
+    background-color: white;
+}
+
+.nav-link:hover {
+    color: #33103a;
 }
 
 .nav-link {
-    color: black;
+    color: #e11f68;
 }
 
 .row {
@@ -50,8 +58,16 @@ img {
     color: black;
 }
 
+.btn-group-vertical
+{
+   display: flex;
+   align-items: center;
+   position: relative;
+   top: 40vh;
+}
+
 .main-center-card {
-    background-color: rgba(210, 236, 225, 0.64);
+    background-color: rgba(225, 31, 104, 0.64);
     margin: 10vh;
     padding: 5vh;
     color: black;
@@ -67,10 +83,31 @@ label {
 button {
     font-family: sans-serif;
     border-radius: 5vh;
-    background-color: rgba(210, 236, 225, 0.8);
+    background-color: #e11f68;
+    min-height: 50px;
+    min-width: 200px;
     border-color: black;
     border-style: solid;
+    color: black;
+
+}
+
+.main-page-btn {
+    border-style: none;
+    margin: 3vh;
+    width: 25%;
     color: white;
+    font: larger;
+
+}
+
+.main-page-btn:hover {
+    border-style: none;
+    margin: 3vh;
+    width: 25%;
+    color: #e11f68;
+    font: larger;
+    background-color: #33103a;
 
 }
 
@@ -88,10 +125,18 @@ button {
     height: auto;
 }
 
+.logo {
+    scale: 150%;
+    position: fixed;
+    left: 10vw;
+}
+
 .btn {
     font-family: sans-serif;
     border-radius: 5vh;
-    background-color: rgba(210, 236, 225, 0.64);
+    background-color: rgba(225, 31, 104, 0.64);
+    min-height: 50px;
+    min-width: 200px;
     border-color: black;
     border-style: solid;
     color: black;
@@ -112,7 +157,7 @@ button {
     border: solid 1px #d7d7d7;
     border-radius: 20px;
     float: left;
-    background-color: rgba(210, 236, 225, 0.8);
+    background-color: rgba(225, 31, 104, 0.8);
     padding: 3em;
     margin: 0 1em;
     color: black;
