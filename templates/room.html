@@ -18,8 +18,10 @@
             {% endif %}
         </div>
     </center>
-    <div id="widget-container" class="center-block">
-      
+    <div class="center-block">
+        <div id="widget-container" style="text-align:center; display:none">
+        
+        </div>
     </div>
 
 {% endblock %}
@@ -69,14 +71,22 @@
     }
     {% endif %}
     
+    var currentIndex = -1;
+    
     function pollRoomState() {
         $.ajax(window.location.href + "/state", {
             'dataType': 'json',
-        }).done(displayRoomState);
+        }).done((obj) => {
+            if (obj.widget_index != currentIndex) {
+                displayRoomState(obj);
+                currentIndex = obj.widget_index;
+            }
+        });
     }
     
     function switch_to_widget_view() {
         $("#pre-game").css("display", "none");
+        $("#widget-container").css("display", "block");
     }
     
     

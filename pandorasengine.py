@@ -3,7 +3,7 @@ import json
 import os
 from datetime import timedelta
 from functools import wraps
-from random import randint, choices
+from random import randint, choices, shuffle
 import pymongo as pymongo
 from bson import ObjectId
 
@@ -99,11 +99,14 @@ def get_room_state(key):
             'widget_index': -1,
             'players': [player['username'] for player in room_data['players']],
         }
-    print(room_data)
+    # print(room_data)
     game = databaseUtils.get_game_by_id(app.client, room_data['game'])
-    print(game)
+    # print(game)
     widget = widgets.get_widget(app.client, game['widgets'][room_data['current_widget']])
     widget['_id'] = str(widget['_id'])
+    # SCUFFED BUT NO TIME:
+    if widget['widget_type'] == 'choice' and type(widget['choices']) == list:
+        shuffle(widget['choices'])
     return {
         'widget_index': room_data['current_widget'],
         'widget': widget,

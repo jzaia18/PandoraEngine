@@ -3,14 +3,14 @@ container = $("#widget-container");
 function displayWidget(activeWidget, isHost=false) {
     switch (activeWidget.widget_type) {
         case "text":
-            e = $("<p>").append(activeWidget.contents);
+            e = $("<h2>").append(activeWidget.contents);
             break;
         case "image":
             e = $("<img>").attr("src", activeWidget.contents);
             break;
         case "text_input":
             e = $("<div>")
-                .append($("<p>").append(activeWidget.contents.prompt))
+                .append($("<h2>").append(activeWidget.contents.prompt))
             if (!isHost) {
                 e.append($("<br>"))
                 .append(
@@ -21,9 +21,30 @@ function displayWidget(activeWidget, isHost=false) {
             }
             break;
         case "choice":
-            e = $("<div")
+            e = $("<div>")
+                .append(
+                    $("<h2>")
+                    .attr("class", "main-center-card card")
+                    .append(activeWidget.contents)
+                )
+                .append($("<br>"))
+            d = $("<div>").attr("class", "btn-group")
+            if (!isHost) {
+                d.append($("<br>"));
+                allChoices = activeWidget.choices
+                for (choice of allChoices) {
+                    e.append(
+                        $("<button>")
+                            .attr("class", "btn")
+                            .attr("onclick", `submitAnswer("${choice}")`)
+                            .append(choice)
+                    );
+                }
+            }
+            e.append(d);
+            break;
         default:
-            e = $("<p>").append(
+            e = $("<h2>").append(
                 "ERROR: Unknown widget type " + activeWidget.widget_type
             );
             break;
