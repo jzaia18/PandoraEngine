@@ -133,7 +133,7 @@ function show_hide_div(calling_widget_name) {
 */
 
 function createChoiceOption(widget_id) {
-    return '<li><input type="text" placeholder="Enter answer choice here" /></li>';
+    return '<li><input class="long-input" type="text" placeholder="Enter answer choice here" /></li>';
 }
 
 function addChoice(widget_id) {
@@ -158,7 +158,7 @@ function create_widget_info(widget_type, widget_id) {
 
 	if (widget_type.includes('rand')) {
 	    content += '<label for="tag-' + widget_name + '">Question Tags (space separated):</label>';
-	    content += '<input type="text" id="tag-' + widget_name + '" />';
+	    content += '<input class="long-input" type="text" id="tag-' + widget_name + '" />';
 	}
 	else {
 	    content += '<label for="prompt-' + widget_name + '">Question:</label>';
@@ -169,7 +169,7 @@ function create_widget_info(widget_type, widget_id) {
 	    content += '<ul id="answer-choices-' + widget_name + '">'
 	    content += createChoiceOption();
             content += '</ul>';
-	    content += '<button id="add-answer-choices-' + widget_name + '"class="btn-primary btn" onclick="addChoice(this.id)">Add choice</button>'
+	    content += '<button id="add-answer-choices-' + widget_name + '"class="btn" onclick="addChoice(this.id)">Add choice</button>'
 	    content += '</div>';
 	}
     }
@@ -192,14 +192,14 @@ function reportActivity(e) {
 	var widget_controls = create_widget_info(widget_type, widget_id);
 	widget_id++;
 
-	$('#' + e.item.id).append($('<button class="btn btn-primary widget-drop-control" type="button" data-bs-toggle="collapse" data-bs-target="#options-' + e.item.id + '" aria-expanded="false" aria-controls="options-' + e.item.id + '"> \
+	$('#' + e.item.id).append($('<button class="btn widget-drop-control" type="button" data-bs-toggle="collapse" data-bs-target="#options-' + e.item.id + '" aria-expanded="false" aria-controls="options-' + e.item.id + '"> \
 		  Info \
 	      </button> \
 	      <div class="collapse" id="options-' + e.item.id + '"> \
 		  <div class="card card-body"> \
 		  ' + widget_controls + '\
 		  </div> \
-		  <button onclick="removeItem(\'' + e.item.id + '\')">Remove</button>\
+		  <button class="btn" onclick="removeItem(\'' + e.item.id + '\')">Remove</button>\
 	      </div>'));
     }
 };
