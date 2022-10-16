@@ -6,7 +6,7 @@
     <center>
         <div>
             <label> Players currently in the room </label>
-            <ul class="list-group">
+            <ul id="player-list" class="list-group">
                 {% for player in room_data['players'] %}
                     <li class="list-group-item">{{ player['username'] }}</li>
                 {% endfor %}
@@ -14,4 +14,33 @@
         </div>
     </center>
 
+{% endblock %}
+
+{% block js %}
+<script>
+    // updates playerlist whenever a player is added
+    // we do not care for players being removed yet
+    let playerList = $("#player-list")
+    let players = []
+    
+    function refreshPlayerList(initialCall) {
+        $.ajax(window.location.href + "/players", {
+            'dataType': 'json',
+        })
+            .done((newPlayers) => {
+                console.log(newPlayers);
+                if (initialCall) playerList.empty();
+                for (var i = players.length; i < newPlayers.length; i++) {
+                    playerList.append(
+                        $('<li class="list-group-item">')
+                            .append(newPlayers[i])
+                    );
+                }
+                players = newPlayers;
+            })
+            .always(() => setTimeout(refreshPlayerList, 1000));
+        
+    }
+    refreshPlayerList(true);
+</script>
 {% endblock %}
