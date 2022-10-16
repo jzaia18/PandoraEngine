@@ -71,17 +71,12 @@
     }
     {% endif %}
     
-    var currentIndex = -1;
+    var currentIndex = -2;
     
     function pollRoomState() {
         $.ajax(window.location.href + "/state", {
             'dataType': 'json',
-        }).done((obj) => {
-            if (obj.widget_index != currentIndex) {
-                displayRoomState(obj);
-                currentIndex = obj.widget_index;
-            }
-        });
+        }).done(displayRoomState);
     }
     
     function switch_to_widget_view() {
@@ -91,7 +86,43 @@
     
     
     function displayRoomState(room_state) {
-        displayWidget(room_state.widget, isHost);
+        if (room_state.widget_index != currentIndex) {
+            currentIndex = room_state.widget_index;
+            displayWidget(room_state.widget, isHost);
+        }
+    }
+    
+    
+    function submitAnswer(value) {
+        $("#widget-container").empty().append(
+            $("<h2>")
+                .attr("class", "main-center-card card")
+                .css("background-color", "#80808080")
+                .append("Submitted...")
+        );
+        $.ajax(window.location.href + "/submit/" + currentIndex, {
+            'method': 'POST',
+            'dataType': 'json',
+            'data':{
+                'answer': value,
+            },
+        }).done(() => {
+            console.log("SUCCESS");
+            $("#widget-container").empty().append(
+                $("<h2>")
+                    .attr("class", "main-center-card card")
+                    .css("background-color", "#00ff0080")
+                    .append("Correct!")
+            )
+        }).fail((x) => {
+            console.log(x)
+            $("#widget-container").empty().append(
+                $("<h2>")
+                    .attr("class", "main-center-card card")
+                    .css("background-color", "#ff000080")
+                    .append("Incorrect!")
+            )
+        });
     }
 
 </script>
