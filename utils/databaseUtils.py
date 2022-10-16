@@ -62,9 +62,19 @@ def create_room(client, key, host, players, game):
         "key": key,
         "host": host,
         "players": players,
-        "game": game})
+        "game": game,
+        "current_widget": -1,
+    })
 
     return room.inserted_id
+
+
+def inc_room_widget(client, key):
+    db = client.Rooms
+    rooms = db.rooms
+    
+    rooms.update_one({"key": key}, {'$inc': {'current_widget': 1}})
+
 
 # `fact` => one correct answer
 # `opinion` => no correct answer
@@ -154,7 +164,8 @@ def create_user(client, username, password):
         user = users.insert_one({
             "username": username,
             "password": hash_password(username, password),
-            "room": None})
+            "room": None
+        })
         return user.inserted_id
     return None
 
