@@ -2,8 +2,12 @@
 
 {% block active_link %}home-link{% endblock %}
 
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/home.css' ) }}">
+{% endblock %}
+
 {% block body %}
-    <img src="static/img/project-logo.png" class="logo responsive">
+    <img src="static/img/project-logo.png" class="logo">
     <div class="center-block">
         <div class="main-page-group">
             <button class="main-page-btn btn" onclick="location.href = '/join';">Join Room</button>

@@ -8,15 +8,9 @@ body {
     color: black;
 }
 
-.responsive {
-    height: auto;
-    max-width: 35%;
-}
-
 .container {
     width: 600px;
 }
-
 
 .wrapper {
     margin: 5vh;
@@ -53,23 +47,8 @@ body {
     color: black;
 }
 
-.main-page-group
-{
-   align-items: center;
-   position: relative;
-   margin-top: 40vh;
-}
-
-.main-page-group button
-{
-   display: block;
-   position: relative;
-   margin-left: auto;
-   margin-right: auto;
-}
-
 .main-center-card {
-    background-color: rgba(225, 31, 104, 0.64);
+    background-color: rgba(225, 31, 104, 0.7);
     padding: 15px;
     color: black;
     position: relative;
@@ -77,7 +56,6 @@ body {
 
 @media screen and (min-width: 960px) {
     .main-center-card {
-        background-color: rgba(225, 31, 104, 0.64);
         margin-top: 10vh;
         width: 80vw;
         left: 10vw;
@@ -87,27 +65,6 @@ body {
 
 label {
   width: 80%;
-}
-
-.main-page-btn {
-    border-style: none;
-    margin: 3vh;
-    color: white;
-    font: larger;
-    max-width: 90vw;
-    max-height: 10vh;
-    min-width: 200px;
-    min-height: 50px;
-    width: 100%;
-    height: 10vh;
-}
-
-.main-page-btn:hover {
-    border-style: none;
-    color: #e11f68;
-    font: larger;
-    background-color: #33103a;
-
 }
 
 .container.center{
@@ -124,16 +81,10 @@ label {
     height: auto;
 }
 
-.logo {
-    scale: 150%;
-    position: fixed;
-    left: 10vw;
-}
-
 .btn {
     font-family: sans-serif;
     border-radius: 5vh;
-    background-color: rgba(225, 31, 104, 0.64);
+    background-color: rgba(225, 31, 104);
     border-color: black;
     border-style: solid;
     color: black;
