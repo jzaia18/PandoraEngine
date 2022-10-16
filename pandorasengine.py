@@ -6,7 +6,7 @@ from functools import wraps
 from random import randint, choice
 import pymongo as pymongo
 
-from flask import Flask, render_template, request, redirect, flash, url_for, session
+from flask import Flask, jsonify, render_template, request, redirect, flash, url_for, session
 from flask_bootstrap import Bootstrap
 from werkzeug.urls import url_encode
 
@@ -19,7 +19,7 @@ def require_login(f):
     @wraps(f)
     def inner(*args, **kwargs):
         if 'user' not in session:
-            flash("Please log in to create posts")
+            flash("Please log in")
             return redirect(url_for("login"))
         else:
             return f(*args, **kwargs)
@@ -71,8 +71,18 @@ def logout():
 def join():
     return render_template("joinRoom.html")
 
+@app.route("/room/<key>/players")
+@require_login
+def get_room_players(key):
+    room_data = databaseUtils.get_room_by_key(app.client, key)
+    if not room_data or all(session['user'] != str(player['_id']) for player in room_data['players']):
+        flash("Invalid playerlist request")
+        return redirect(request.url_root)
+    return jsonify([player['username'] for player in room_data['players']])
+    
 
 @app.route("/room/<key>")
+@require_login
 def room(key):
     room_data = databaseUtils.get_room_by_key(app.client, key)
     if room_data:
@@ -89,6 +99,7 @@ def createRoom():
 
 # Utility Routes, you do not stay on these pages
 @app.route("/addRoom", methods=["GET", "POST"])
+@require_login
 def addRoom():
     key = []
     game = databaseUtils.get_game_by_id(request.form['gameID'])
@@ -117,6 +128,12 @@ def widget_new_text():
 
     return str(widgets.create_text_widget(app.client, request.form['text']))
 
+@app.route("/widget/new/text_input", methods=['POST'])
+def widget_new_text_input():
+    if 'prompt' not in request.form:
+        return None # Error
+
+    return str(widgets.create_text_input_widget(app.client, request.form['prompt']))
 
 @app.route("/widget")
 def widget():
@@ -151,7 +168,7 @@ def imgUP():
 
 @app.route("/test")
 def test():
-    return render_template("game.html")
+    return render_template("test.html")
 
 
 @app.route("/game")
