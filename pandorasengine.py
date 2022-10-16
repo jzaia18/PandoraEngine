@@ -84,7 +84,7 @@ def room(key):
 
 @app.route("/createRoom")
 def createRoom():
-    return render_template("createRoom.html")
+    return render_template("createRoom.html", games=databaseUtils.get_games(app.client))
 
 
 # Utility Routes, you do not stay on these pages
