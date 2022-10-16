@@ -65,7 +65,7 @@
     
     {% if is_host %}
     function startGame() {
-        $.ajax(window.location.href + "/begin")
+        $.ajax(window.location.href + "/next")
             // .success(switch_to_game_view)
             .fail(startGame);
     }
