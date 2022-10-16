@@ -119,6 +119,7 @@ def addRoom():
 
 
 @app.route("/editor")
+@require_login
 def editor():
     return render_template("editor.html")
 
@@ -250,6 +251,10 @@ def addGame():
         return {}
 
     abort(400)
+
+@app.route("/question-submission")
+def question_submission():
+    return render_template("question-submission.html")
 
 
 @app.route("/auth", methods=["POST", "GET"])
