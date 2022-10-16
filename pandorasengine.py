@@ -73,6 +73,7 @@ def logout():
 def join():
     return render_template("joinRoom.html")
 
+
 @app.route("/room/<key>/players")
 @require_login
 def get_room_players(key):
@@ -83,6 +84,7 @@ def get_room_players(key):
         return '', 403
     return jsonify([player['username'] for player in room_data['players']])
 
+
 @app.route("/room/<key>/state")
 @require_login
 def get_room_state(key):
@@ -91,7 +93,7 @@ def get_room_state(key):
         return '', 400
     if not databaseUtils.user_in_room(app.client, room_data, session['user']):
         return '', 403
-    
+
     if room_data['current_widget'] == -1:
         return {
             'widget_index': -1,
@@ -107,6 +109,7 @@ def get_room_state(key):
         'widget': widget,
     }
 
+
 @app.route("/room/<key>")
 @require_login
 def room(key):
@@ -115,7 +118,7 @@ def room(key):
         is_host = session['user'] == room_data['host']
         if not is_host:
             databaseUtils.add_user_to_room(app.client, key, databaseUtils.get_user_by_id(app.client, session['user']))
-        return render_template("room.html", room_data=room_data, is_host = is_host)
+        return render_template("room.html", room_data=room_data, is_host=is_host)
     flash("Room does not exist!")
     return redirect(url_for('join'))
 
@@ -134,7 +137,6 @@ def startRoom(key):
     return response
 
 
-
 @app.route("/createRoom")
 def createRoom():
     return render_template("createRoom.html", games=databaseUtils.get_games(app.client))
@@ -148,7 +150,7 @@ def addRoom():
     # game = databaseUtils.get_game_by_id(app.client, request.form['gameID'])
     gameID = ObjectId(request.form['gameID'])
     key = ''.join(choices(gameUtils.alphanumeric, k=4))
-    
+
     databaseUtils.clear_user_room(app.client, session['user'])
     databaseUtils.create_room(app.client, key, session['user'], [], gameID)
     databaseUtils.add_room_to_user(app.client, session['username'], key)
@@ -168,12 +170,14 @@ def widget_new_text():
 
     return str(widgets.create_text_widget(app.client, request.form['text']))
 
+
 @app.route("/widget/new/text_input", methods=['POST'])
 def widget_new_text_input():
     if 'prompt' not in request.form:
-        return None # Error
+        return None  # Error
 
     return str(widgets.create_text_input_widget(app.client, request.form['prompt']))
+
 
 @app.route("/widget")
 def widget():
@@ -237,9 +241,9 @@ def validateWidget():
 
     elif request.form['widget_type'] == 'choice':
         if not request.form['contents'] or not request.form['random'] or \
-           (not request.form['choices'] and not request.form['random']) or not request.form['opinion']:
+                (not request.form['choices'] and not request.form['random']) or not request.form['opinion']:
             abort(400)
-            
+
     else:
         flash("Invalid Widget Type**DEBUG ERROR")
 
@@ -251,7 +255,7 @@ def generateWidgets():
     response = list()
     for field in request.form:
         widget = json.loads(request.form[field])
-        
+
         if widget['widget_type'] == 'text':
             widget_id = widgets.create_text_widget(app.client, widget['contents'], widget['timer'])
             response.append(str(widget_id))
@@ -259,19 +263,21 @@ def generateWidgets():
         elif widget['widget_type'] == 'image':
             widget_id = widgets.create_image_widget(app.client, widget['contents'], widget['timer'])
             response.append(str(widget_id))
-            
+
         elif widget['widget_type'] == 'text_input':
             widget_id = widgets.create_text_input_widget(app.client, widget['contents'], widget['timer'])
             response.append(str(widget_id))
-            
+
         elif widget['widget_type'] == 'choice':
-            widget_id = widgets.create_choice_widget(app.client, widget['contents'], widget['choices'] and json.loads(widget['choices']), widget['random'], widget['opinion'], widget['timer'])
+            widget_id = widgets.create_choice_widget(app.client, widget['contents'],
+                                                     widget['choices'] and json.loads(widget['choices']),
+                                                     widget['random'], widget['opinion'], widget['timer'])
             response.append(str(widget_id))
-            
+
         else:
             print(field)
             flash("Invalid Widget Type**DEBUG ERROR")
-        
+
     return {'widgets': response}
 
 
@@ -308,6 +314,21 @@ def submitQuestion():
     flash("Question Submitted!")
     return redirect(url_for("questionSubmission"))
 
+
+@app.route("room/<key>/<index>", methods=["POST"])
+def answer(key, index):
+    room = databaseUtils.get_room_by_key(app.client, key)
+    question = room['game']['widgets'][int(index)]
+
+    if request.form['answer'] == question['correct_answer']:
+        flash("Correct Answer")
+        data = {"verity": True}
+        response = app.response_class(response=data, status=200, mimetype='application/json')
+        return response
+
+    data = {"verity": False}
+    response = app.response_class(response=data, status=400, mimetype='application/json')
+    return response
 
 
 @app.route("/auth", methods=["POST", "GET"])
