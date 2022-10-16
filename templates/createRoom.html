@@ -12,10 +12,10 @@
                   <div class="input-group-prepend">
                       <label class="input-group-text" for="gameSelect">Game</label>
                   </div>
-                  <select class="custom-select" id="gameSelect">
+                  <select class="custom-select" id="gameSelect" name="gameID">
                     <option selected>Choose...</option>
                     {% for game in games %}
-                        <option value={{game._id}}>{{game.name}}</option>
+                        <option value="{{game._id}}">{{game.name}}</option>
                     {% endfor %}
                   </select>
                 </div>

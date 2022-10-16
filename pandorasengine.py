@@ -102,7 +102,7 @@ def createRoom():
 @require_login
 def addRoom():
     key = []
-    game = databaseUtils.get_game_by_id(request.form['gameID'])
+    game = databaseUtils.get_game_by_id(app.client, request.form['gameID'])
     while True:
         for i in range(4):
             key.append(choice(gameUtils.alphanumeric))
