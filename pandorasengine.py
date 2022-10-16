@@ -77,6 +77,7 @@ def join():
 @app.route("/room/<key>/players")
 @require_login
 def get_room_players(key):
+    key = key.lower()
     room_data = databaseUtils.get_room_by_key(app.client, key)
     if not room_data:
         return '', 400
@@ -88,6 +89,7 @@ def get_room_players(key):
 @app.route("/room/<key>/state")
 @require_login
 def get_room_state(key):
+    key = key.lower()
     room_data = databaseUtils.get_room_by_key(app.client, key)
     if not room_data:
         return '', 400
@@ -116,6 +118,7 @@ def get_room_state(key):
 @app.route("/room/<key>")
 @require_login
 def room(key):
+    key = key.lower()
     room_data = databaseUtils.get_room_by_key(app.client, key)
     if room_data:
         is_host = session['user'] == room_data['host']
@@ -129,6 +132,7 @@ def room(key):
 @app.route("/room/<key>/next")
 @require_login
 def startRoom(key):
+    key = key.lower()
     room_data = databaseUtils.get_room_by_key(app.client, key)
     if not room_data:
         return '', 400
@@ -320,6 +324,7 @@ def submitQuestion():
 
 @app.route("/room/<key>/submit/<index>", methods=["POST"])
 def answer(key, index):
+    key = key.lower()
     room = databaseUtils.get_room_by_key(app.client, key)
     game = databaseUtils.get_game_by_id(app.client, room['game'])
     question = widgets.get_widget(app.client, game['widgets'][int(index)])
