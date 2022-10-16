@@ -6,7 +6,9 @@
 
 {% block body %}
     <center>
+        <div class="card">
         <div id="pre-game">
+            <h3>Join in the fun with room code: {{ room_data['key'] }}</h3>
             <label> Players currently in the room </label>
             <ul id="player-list" class="list-group">
                 {% for player in room_data['players'] %}
@@ -14,6 +16,7 @@
                 {% endfor %}
             </ul>
         </div>
+    </div>
     </center>
     <div class="center-block">
         <div id="widget-container" style="text-align:center; display:none">
