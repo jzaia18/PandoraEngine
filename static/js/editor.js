@@ -22,8 +22,8 @@ $('#timeline').sortable({
 
 var widget_id = 0;
 
-function get_timeline() {
-    let arr = [];
+function post_timeline() {
+    let all_widgets = {};
     
     for (elem of $('#timeline')[0].children) {
 	var widget = {
@@ -34,31 +34,69 @@ function get_timeline() {
 	if (widget.widget_type == 'text') {
 	    widget.contents = $('#content-' + elem.id)[0].value
 	}
-	arr.push(widget)
+	all_widgets[elem.id] = widget;
     }
-    
-    for (widget of arr) {
-	console.log(widget);
-	continue
-	$.ajax({
+
+    var arr = [];
+
+    function recurse_ajax(objs) {
+	if (objs.length == 0) {
+	    for (key of Object.keys(all_widgets)) {
+		all_widgets[key] = JSON.stringify(all_widgets[key])
+	    }
+
+	    $.ajax({
+		type: "POST",
+		url: "/generateWidgets",
+		data: all_widgets,
+		success: function (data) {
+		    console.log('Widgets created!.');
+		    console.log(data);
+		},
+		error: function (e) {
+		    console.log(e)
+		}
+	    });
+	}
+	else {
+	    $.ajax({
+		type: "POST",
+		url: "/validateWidget",
+		data: objs[0],
+		success: function (data) {
+		    console.log('Widget validated.');
+		    console.log(data);
+		    recurse_ajax(objs.slice(1));
+		},
+		error: function (e) {
+		    alert(JSON.stringify(e));
+		},
+	    });
+	}
+    }
+
+    recurse_ajax(Object.values(all_widgets))
+
+    return
+    for (widget of Object.values(all_widgets)) {
+	var resp = $.ajax({
             type: "POST",
             url: "/validateWidget",
             data: widget,
             success: function (data) {
-		console.log(data);
+		console.log('Widget validated.');
             },
             error: function (e) {
-		console.log(e);
+		alert(JSON.stringify(e));
             }
 	});
+
+	arr.push(resp);
     }
 
-    return arr;
 }
 
-$('#get-order').click(function() {
-    console.log(get_timeline())
-});
+$('#get-order').click(post_timeline);
 
 /* 
 function show_hide_div(calling_widget_name) {
