@@ -1,4 +1,3 @@
-let numAnswers;
 let answers;
 let numSelector;
 
@@ -8,16 +7,6 @@ wrapper.className = "form-group";
 
 let numAnswers = 1;
 answers = document.createElement('div');
-
-let qLabel = document.createElement('label');
-qLabel.innerText = "Question:";
-qLabel.htmlFor = "McQ";
-
-let mcQ = document.createElement('input');
-mcQ.type = 'text';
-mcQ.id = "McQ";
-mcQ.name = "McQ";
-mcQ.className = 'form-control';
 
 label.innerText = "Number of Options"
 label.htmlFor = "numOptions";
@@ -30,9 +19,9 @@ for( let k = 0; k < 10; k++ )
     numSelector.append(temp);
 }
 
-numSelector.name = "McNumAnswers" + i;
-numSelector.id = "McNumAnswers" + i;
-numSelector.onchange = function ()
+numSelector.name = "McNumAnswers";
+numSelector.id = "McNumAnswers";
+function makeOptions()
 {
     numAnswers = parseInt(numSelector.value);
     console.log(numAnswers);
@@ -45,7 +34,7 @@ numSelector.onchange = function ()
 
         var tempLabel = document.createElement("label");
         tempLabel.htmlFor = "McA" + j;
-        tempLabel.innerText = "Answer  " + (j + 1);
+        tempLabel.innerText = "Choice  " + (j + 1);
 
         tempWrap.append(tempLabel);
 
@@ -56,19 +45,15 @@ numSelector.onchange = function ()
 
         tempWrap.append(tempInput);
 
-        var tempCorrect = document.createElement('input');
-        tempCorrect.type = 'checkbox';
-        tempCorrect.id = 'McC' + j;
-        tempCorrect.name = "McC" + j;
-
-        tempWrap.append(tempCorrect);
-
         answers.append(tempWrap);
     }
 }
 
-wrapper.append(qLabel);
-wrapper.append(mcQ);
+numSelector.onchange = makeOptions;
+
 wrapper.append(label);
 wrapper.append(numSelector);
 wrapper.append(answers);
+makeOptions();
+
+$("#other-answers")[0].append(wrapper)

@@ -261,12 +261,15 @@ def questionSubmission():
 @app.route("/submitQuestion", methods=["POST"])
 def submitQuestion():
     question = request.form['question']
-    answers = request.form['answers']
+    answers = []
+    for key in request.form:
+        if 'McA' in key:
+            answers.append(request.form[key])
     correct = request.form['correct']
     tags = request.form['tags'].split(",")
     databaseUtils.create_fact_multiple_choice(app.client, question, correct, answers, tags)
-    flash("Question Submit!")
-    redirect(request.url)
+    flash("Question Submitted!")
+    return redirect(url_for("questionSubmission"))
 
 
 
