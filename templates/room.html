@@ -86,11 +86,22 @@
         $("#widget-container").css("display", "block");
     }
     
+    function back_to_player_list() {
+        $("#pre-game").css("display", "block");
+        $("#widget-container").css("display", "none");
+    }
+    
     
     function displayRoomState(room_state) {
         if (room_state.widget_index != currentIndex) {
-            currentIndex = room_state.widget_index;
-            displayWidget(room_state.widget, isHost);
+            if (room_state.widget_index == -1) {
+                clearInterval(prsIntervalId);
+                plIntervalId = setInterval(refreshPlayerList, 1000);
+                back_to_player_list();
+            } else {
+                currentIndex = room_state.widget_index;
+                displayWidget(room_state.widget, isHost);
+            }
         }
     }
     
