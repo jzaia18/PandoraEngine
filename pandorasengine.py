@@ -5,6 +5,7 @@ from datetime import timedelta
 from functools import wraps
 from random import randint, choice
 import pymongo as pymongo
+from bson import ObjectId
 
 from flask import Flask, jsonify, render_template, request, redirect, flash, url_for, session, abort
 from flask_bootstrap import Bootstrap
@@ -208,50 +209,46 @@ def validateWidget():
 
 @app.route("/generateWidgets", methods=["POST"])
 def generateWidgets():
-    response = dict()
+    response = list()
     for field in request.form:
         widget = json.loads(request.form[field])
         
         if widget['widget_type'] == 'text':
             widget_id = widgets.create_text_widget(app.client, widget['contents'], widget['timer'])
-            response[str(widget_id)] = widgets.get_widget(app.client, widget_id)
+            response.append(str(widget_id))
 
         elif widget['widget_type'] == 'image':
             widget_id = widgets.create_image_widget(app.client, widget['contents'], widget['timer'])
-            response[str(widget_id)] = widgets.get_widget(app.client, widget_id)
-
+            response.append(str(widget_id))
+            
         elif widget['widget_type'] == 'text_input':
             widget_id = widgets.create_text_input_widget(app.client, widget['contents'], widget['timer'])
-            response[str(widget_id)] = widgets.get_widget(app.client, widget_id)
-
+            response.append(str(widget_id))
+            
         elif widget['widget_type'] == 'choice':
             widget_id = widgets.create_choice_widget(app.client, widget['contents'], widget['choices'] and json.loads(widget['choices']), widget['random'], widget['opinion'], widget['timer'])
-            response[str(widget_id)] = widgets.get_widget(app.client, widget_id)
-
+            response.append(str(widget_id))
+            
         else:
             print(field)
             flash("Invalid Widget Type**DEBUG ERROR")
-
-    for widget in response.values():
-        widget['_id'] = str(widget['_id'])
         
-    return response
+    return {'widgets': response}
 
 
 @app.route("/addGame", methods=["POST"])
 def addGame():
     name = request.form['name']
-    max_players = request.form['maxplayers']
-    question_banks = request.form['questionbanks']
-    widgets = request.form['widgets']
+    max_players = request.form['max_players']
+    widgets = json.loads(request.form['widgets'])
+    widgets = [ObjectId(x) for x in widgets]
 
-    if name and max_players and question_banks and widgets:
-        databaseUtils.create_game(name, max_players, question_banks, widgets)
+    if name and max_players and widgets:
+        databaseUtils.create_game(app.client, name, max_players, widgets)
         flash("Game Created Successfully!")
         return redirect(url_for('createRoom'))
 
-    flash("Error when creating game, missing parameter values")
-    redirect(request.url)
+    abort(400)
 
 
 @app.route("/auth", methods=["POST", "GET"])

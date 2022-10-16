@@ -62,7 +62,7 @@ function post_timeline() {
     function recurse_ajax(objs) {
 	if (objs.length == 0) {
 	    for (key of Object.keys(all_widgets)) {
-		all_widgets[key] = JSON.stringify(all_widgets[key])
+			all_widgets[key] = JSON.stringify(all_widgets[key])
 	    }
 
 	    $.ajax({
@@ -71,6 +71,25 @@ function post_timeline() {
 		data: all_widgets,
 		success: function (data) {
 		    console.log('Widgets created!');
+			console.log(data);
+
+			var game_data = {
+				name: $('#game-name')[0].value,
+				max_players: Number($('#game-num-players')[0].value),
+				widgets: JSON.stringify(data['widgets'])
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "/addGame",
+				data: game_data,
+				success: function(e) {
+					console.log(e)
+				},
+				error: function (e) {
+					alert(JSON.stringify(e))
+				}
+			});
 		},
 		error: function (e) {
 		    alert(JSON.stringify(e))

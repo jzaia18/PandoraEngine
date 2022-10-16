@@ -19,11 +19,10 @@ class Player:
 
 
 class Game:
-    def __init__(self, name, max_players, question_banks, widgets):
+    def __init__(self, name, max_players, widgets):
         self.name = name
         self.max_players = max_players
         self.players = set()
-        self.question_banks = question_banks
         self.widgets = widgets
         self.status = GameStatus.STOPPED
 
